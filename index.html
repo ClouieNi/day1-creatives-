@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day-1 CREATIVES</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --bg:#0b0e17;--sidebar:#0e1220;--panel:#131826;--panel-2:#1a2032;--line:#242c42;
+  --text:#e8eaf2;--muted:#8b93a8;--accent:#7c6cf5;--accent-soft:rgba(124,108,245,.14);
+  --amber:#e8a33d;--blue:#5b9df0;--green:#4fc98c;--rose:#e06a6a;--radius:12px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Poppins',sans-serif;font-size:14px;line-height:1.55;min-height:100vh}
+button{font-family:'Poppins',sans-serif;font-weight:500;font-size:13.5px;border:none;border-radius:9px;padding:9px 16px;cursor:pointer;transition:all .15s}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:#8d7ff7}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}.btn-ghost:hover{color:var(--text);border-color:var(--muted)}
+.btn-danger{background:transparent;color:var(--rose);border:1px solid var(--line)}.btn-danger:hover{border-color:var(--rose)}
+.btn-green{background:rgba(79,201,140,.15);color:var(--green);border:1px solid rgba(79,201,140,.35)}.btn-green:hover{background:rgba(79,201,140,.25)}
+input,select,textarea{background:var(--panel-2);border:1px solid var(--line);border-radius:9px;padding:10px 12px;color:var(--text);font-family:'Poppins',sans-serif;font-size:14px;resize:vertical}
+input[type=date]{color-scheme:dark}
+select{cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%238b93a8' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px}
+select option{background:var(--panel-2);color:var(--text)}
+::placeholder{color:#5d647a}
+
+/* loading */
+#loadingScreen{position:fixed;inset:0;background:var(--bg);z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+.spinner{width:36px;height:36px;border:3px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loadingScreen p{color:var(--muted);font-size:14px}
+
+/* login */
+#loginScreen{position:fixed;inset:0;background:var(--bg);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
+.login-card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:40px 36px;width:min(410px,100%);text-align:center}
+.login-logo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px}
+.logo-mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--accent),#4a9df0);display:inline-flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:14px}
+.login-logo .name{font-weight:700;font-size:20px}
+.login-sub{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:28px}
+.login-card .field{text-align:left;margin-bottom:18px}
+.login-card label{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:7px;font-weight:600}
+.login-card input,.login-card select{width:100%}
+.login-error{color:var(--rose);font-size:13px;min-height:20px;margin:4px 0 8px}
+.login-card .btn-primary{width:100%;padding:12px;font-size:15px;font-weight:600}
+.login-hint{margin-top:18px;font-size:12px;color:var(--muted)}
+
+/* app shell */
+#app{display:none}
+.shell{display:flex;min-height:100vh}
+.sidebar{width:230px;background:var(--sidebar);border-right:1px solid var(--line);display:flex;flex-direction:column;position:fixed;top:0;bottom:0;left:0;z-index:20}
+.side-logo{display:flex;align-items:center;gap:10px;padding:22px 18px 4px}
+.side-logo .name{font-weight:700;font-size:16px}
+.side-sub{font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);padding:2px 18px 18px 62px}
+.user-card{margin:0 12px 20px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;flex-shrink:0}
+.user-card .uname{font-weight:600;font-size:13.5px;line-height:1.2}
+.user-card .urole{font-size:11px;color:var(--muted)}
+.nav{flex:1;padding:0 12px}
+.nav button{display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:transparent;color:var(--muted);padding:11px 12px;border-radius:9px;margin-bottom:3px;font-weight:500}
+.nav button:hover{color:var(--text);background:rgba(255,255,255,.03)}
+.nav button.active{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.nav .ico{width:20px;text-align:center;font-size:15px}
+.side-bottom{padding:14px 12px;border-top:1px solid var(--line)}
+.side-bottom button{width:100%;background:transparent;color:var(--rose);text-align:left;padding:10px 12px}
+.side-bottom button:hover{background:rgba(224,106,106,.08)}
+.main{flex:1;margin-left:230px;min-width:0}
+.topbar{padding:18px 0;border-bottom:1px solid var(--line);background:var(--sidebar);position:sticky;top:0;z-index:10}
+.topbar-inner{padding:0 40px}
+.topbar .pg-title{font-weight:600;font-size:16px}
+.topbar .pg-sub{font-size:12px;color:var(--muted)}
+.content{padding:30px 40px 80px;width:100%}
+.menu-toggle{display:none;position:fixed;top:14px;right:14px;z-index:30;background:var(--panel);border:1px solid var(--line);color:var(--text);padding:8px 12px;border-radius:9px}
+
+/* toast */
+.toast{position:fixed;bottom:28px;right:28px;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:12px 18px;font-size:13.5px;z-index:300;opacity:0;transform:translateY(8px);transition:all .25s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.error{border-color:var(--rose);color:var(--rose)}
+.toast.success{border-color:var(--green);color:var(--green)}
+
+/* admin */
+.admin-only{display:none !important}
+body.is-admin .admin-only{display:inline-flex !important}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:30px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;text-align:center}
+.stat .num{font-size:30px;font-weight:700;line-height:1.15}
+.stat .lbl{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:6px;font-weight:600}
+.stat.c-total .num{color:var(--text)}.stat.c-done .num{color:var(--green)}.stat.c-prog .num{color:var(--blue)}.stat.c-not .num{color:var(--amber)}
+
+/* progress */
+.progress-track{height:7px;background:var(--panel-2);border-radius:4px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),#4a9df0);border-radius:4px;transition:width .5s cubic-bezier(.22,1,.36,1)}
+
+/* pills */
+.pill{display:inline-block;font-size:11.5px;font-weight:600;padding:4px 12px;border-radius:999px;white-space:nowrap}
+.pill.notstarted{background:rgba(232,163,61,.13);color:var(--amber);border:1px solid rgba(232,163,61,.4)}
+.pill.inprogress{background:rgba(91,157,240,.13);color:var(--blue);border:1px solid rgba(91,157,240,.4)}
+.pill.completed{background:rgba(79,201,140,.13);color:var(--green);border:1px solid rgba(79,201,140,.4)}
+
+/* plan bar */
+.plan-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:26px}
+.plan-bar select{max-width:300px;flex:1;min-width:180px}
+.plan-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;margin-bottom:8px}
+.plan-head h2{font-size:24px;font-weight:700}
+.plan-desc{color:var(--muted);font-size:13.5px;max-width:700px;margin-bottom:20px}
+.progress-line{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin:10px 0 30px}
+.progress-line strong{color:var(--accent)}
+
+/* toolbar */
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.toolbar input[type=search]{flex:1;min-width:170px}
+
+/* task cards */
+.task-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:12px;overflow:hidden}
+.task-card.completed-card{border-color:rgba(79,201,140,.25)}
+.task-top{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer}
+.task-top .chev{color:var(--muted);font-size:11px;transition:transform .2s;flex-shrink:0}
+.task-card.open .chev{transform:rotate(90deg)}
+.task-info{flex:1;min-width:0}
+.task-title{font-weight:600;font-size:15px}
+.task-meta{font-size:12px;color:var(--muted);margin-top:2px}
+.task-meta b{color:#aeb6c9;font-weight:600}
+.att-count{font-size:11.5px;color:var(--accent);font-weight:600;margin-left:8px}
+.task-body{display:none;border-top:1px solid var(--line);padding:18px 20px;background:rgba(255,255,255,.015)}
+.task-card.open .task-body{display:block}
+.task-notes{font-size:13px;color:var(--muted);margin-bottom:12px}
+.task-dates{font-size:12px;color:var(--muted);margin-bottom:14px}
+.att-list{margin-bottom:14px}
+.att-item{display:flex;align-items:center;gap:10px;background:var(--panel-2);border:1px solid var(--line);border-radius:9px;padding:9px 12px;margin-bottom:7px}
+.att-type{font-size:10px;font-weight:700;letter-spacing:.08em;padding:3px 8px;border-radius:5px;flex-shrink:0}
+.att-type.video{background:rgba(224,106,106,.15);color:#f08c8c}
+.att-type.audio{background:rgba(232,163,61,.15);color:var(--amber)}
+.att-type.image{background:rgba(91,157,240,.15);color:var(--blue)}
+.att-type.doc{background:rgba(79,201,140,.15);color:var(--green)}
+.att-type.link{background:rgba(124,108,245,.15);color:var(--accent)}
+.att-item a{color:var(--text);text-decoration:none;font-weight:500;font-size:13px;word-break:break-all;flex:1}
+.att-item a:hover{color:var(--accent);text-decoration:underline}
+.att-by{font-size:11px;color:var(--muted);flex-shrink:0}
+.att-item .rm{background:none;border:none;color:var(--muted);padding:2px 6px;font-size:14px}
+.att-item .rm:hover{color:var(--rose)}
+.task-actions{display:flex;gap:8px;flex-wrap:wrap}
+.task-actions button{padding:7px 13px;font-size:12.5px}
+.done-by{font-size:12px;color:var(--green);margin-top:10px}
+.empty{padding:44px 20px;text-align:center;color:var(--muted);background:var(--panel);border:1px dashed var(--line);border-radius:var(--radius)}
+.empty p{margin-bottom:14px}
+
+/* dashboard */
+h2.section{font-weight:600;font-size:18px;margin:0 0 16px}
+.dash-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+.card h3{font-size:14px;font-weight:600;margin-bottom:16px}
+.plan-row{margin-bottom:14px;cursor:pointer;padding:10px;border-radius:9px}
+.plan-row:hover{background:rgba(255,255,255,.03)}
+.plan-row .pr-top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:7px}
+.plan-row .pr-top b{font-weight:600}
+.plan-row .pr-top span{color:var(--muted);font-size:12px}
+.activity-item{display:flex;gap:11px;padding:9px 0;border-bottom:1px solid var(--line);font-size:12.5px}
+.activity-item:last-child{border-bottom:none}
+.activity-item .avatar{width:26px;height:26px;font-size:11px;flex-shrink:0}
+.activity-item .a-text{flex:1;color:#c3c9d8}
+.activity-item .a-text b{color:var(--text)}
+.activity-item .a-time{color:var(--muted);font-size:11px;white-space:nowrap}
+
+/* team */
+.team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.member{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;position:relative}
+.member.me{border-color:rgba(124,108,245,.45)}
+.member .name{font-weight:600;font-size:15px}
+.member .role{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:3px 0 9px;font-weight:600}
+.member .detail{font-size:12.5px;color:var(--muted);word-break:break-all}
+.member .card-actions{position:absolute;top:10px;right:10px;display:flex;gap:4px}
+.member .card-actions button{background:transparent;border:1px solid var(--line);color:var(--muted);font-size:12px;padding:4px 9px;border-radius:7px}
+.member .card-actions button:hover{color:var(--accent);border-color:var(--accent)}
+.member .card-actions button.rm:hover{color:var(--rose);border-color:var(--rose)}
+.team-actions{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap}
+.you-tag{font-size:10px;font-weight:600;color:var(--accent);background:var(--accent-soft);border-radius:5px;padding:2px 7px;vertical-align:middle;margin-left:6px}
+.role-badge{font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--amber);background:rgba(232,163,61,.13);border:1px solid rgba(232,163,61,.4);border-radius:5px;padding:1px 7px;margin-left:6px;vertical-align:middle}
+
+/* modals */
+dialog{position:fixed;inset:0;margin:auto;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:16px;padding:28px;width:min(470px,92vw);max-height:88vh;overflow:auto;height:fit-content}
+dialog::backdrop{background:rgba(4,6,12,.75)}
+dialog h3{font-weight:600;font-size:18px;margin-bottom:20px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-weight:600}
+.field input,.field select,.field textarea{width:100%}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:24px}
+#confirmModal{width:min(380px,92vw)}
+#confirmModal p{color:var(--muted);font-size:14px;margin-top:-6px}
+dialog[open]{animation:pop .18s ease}
+@keyframes pop{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
+
+/* realtime indicator */
+.rt-dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;margin-right:6px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+@media (max-width:820px){
+  .sidebar{transform:translateX(-100%);transition:transform .25s}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0}
+  .menu-toggle{display:block}
+  .content{padding:22px 16px 60px;width:100%}
+  .topbar{padding:16px 0}
+  .topbar-inner{padding:0 60px 0 16px}
+  .dash-grid{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){.progress-fill,.toast,.spinner{transition:none;animation:none}}
+</style>
+</head>
+<body>
+
+<div id="loadingScreen"><div class="spinner"></div><p>Connecting...</p></div>
+
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo"><span class="logo-mark">D1</span><span class="name">Day-1 CREATIVES</span></div>
+    <div class="login-sub">Team Workspace</div>
+    <div class="field">
+      <label for="loginName">Who are you?</label>
+      <select id="loginName"></select>
+    </div>
+    <div class="field" id="newNameField" style="display:none">
+      <label for="loginNewName">Your name</label>
+      <input id="loginNewName" type="text" placeholder="Type your name">
+    </div>
+    <div class="field">
+      <label for="pinInput">Team PIN</label>
+      <input id="pinInput" type="password" inputmode="numeric" maxlength="4" placeholder="Enter PIN" autocomplete="off">
+    </div>
+    <div class="login-error" id="loginError"></div>
+    <button class="btn-primary" id="loginBtn">Enter workspace</button>
+    <div class="login-hint">Ask your team lead for the PIN.</div>
+  </div>
+</div>
+
+<div id="app">
+<button class="menu-toggle" id="menuToggle">Menu</button>
+<div class="shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="side-logo"><span class="logo-mark">D1</span><span class="name">Day-1 CREATIVES</span></div>
+    <div class="side-sub">Team Workspace</div>
+    <div class="user-card">
+      <div class="avatar" id="userAvatar">?</div>
+      <div><div class="uname" id="userName"></div><div class="urole" id="userRole"></div></div>
+    </div>
+    <nav class="nav">
+      <button data-view="dashboard" class="active"><span class="ico">&#9632;</span> Dashboard</button>
+      <button data-view="plans"><span class="ico">&#9776;</span> Plans &amp; Tasks</button>
+      <button data-view="team"><span class="ico">&#9679;</span> Team</button>
+    </nav>
+    <div class="side-bottom"><button id="logoutBtn">Log out</button></div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-inner">
+        <div class="pg-title" id="pageTitle">Dashboard</div>
+        <div class="pg-sub" id="pageSub"><span class="rt-dot"></span>Live</div>
+      </div>
+    </div>
+    <div class="content">
+
+      <section id="view-dashboard">
+        <div class="stats">
+          <div class="stat c-total"><div class="num" id="dTotal">0</div><div class="lbl">Total tasks</div></div>
+          <div class="stat c-done"><div class="num" id="dDone">0</div><div class="lbl">Completed</div></div>
+          <div class="stat c-prog"><div class="num" id="dProg">0</div><div class="lbl">In progress</div></div>
+          <div class="stat c-not"><div class="num" id="dNot">0</div><div class="lbl">Not started</div></div>
+        </div>
+        <div class="dash-grid">
+          <div class="card"><h3>Plans</h3><div id="dashPlans"></div></div>
+          <div class="card"><h3>Recent activity</h3><div id="dashActivity"></div></div>
+        </div>
+      </section>
+
+      <section id="view-plans" hidden>
+        <div class="plan-bar">
+          <select id="planSelect" aria-label="Select plan"></select>
+          <button class="btn-primary admin-only" id="newPlanBtn">+ New plan</button>
+          <button class="btn-ghost admin-only" id="editPlanBtn">Edit</button>
+          <button class="btn-danger admin-only" id="deletePlanBtn">Delete</button>
+        </div>
+        <div class="plan-head">
+          <h2 id="planTitle">Loading...</h2>
+          <button class="btn-primary" id="addTaskBtn">+ Add task</button>
+        </div>
+        <div class="plan-desc" id="planDesc"></div>
+        <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0"></div></div>
+        <div class="progress-line"><span><strong id="progressPct">0%</strong> completed</span><span id="progressCount"></span></div>
+        <div class="stats">
+          <div class="stat c-total"><div class="num" id="pTotal">0</div><div class="lbl">Total</div></div>
+          <div class="stat c-done"><div class="num" id="pDone">0</div><div class="lbl">Completed</div></div>
+          <div class="stat c-prog"><div class="num" id="pProg">0</div><div class="lbl">In progress</div></div>
+          <div class="stat c-not"><div class="num" id="pNot">0</div><div class="lbl">Not started</div></div>
+        </div>
+        <div class="toolbar">
+          <input type="search" id="searchInput" placeholder="Search tasks...">
+          <select id="statusFilter">
+            <option value="">All statuses</option>
+            <option value="Not Started">Not Started</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+          </select>
+        </div>
+        <div id="taskList"></div>
+        <div class="empty" id="emptyState" hidden>
+          <p>No tasks here yet.</p>
+          <button class="btn-primary" onclick="openTaskModal()">+ Add the first task</button>
+        </div>
+      </section>
+
+      <section id="view-team" hidden>
+        <h2 class="section">Project Team</h2>
+        <div class="team-grid" id="teamGrid"></div>
+        <div class="team-actions">
+          <button class="btn-primary admin-only" id="addMemberBtn">+ Add team member</button>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Dialogs -->
+<dialog id="planModal">
+  <h3 id="planModalTitle">New plan</h3>
+  <div class="field"><label for="pName">Plan name</label><input id="pName" type="text" placeholder="e.g. Website Redesign"></div>
+  <div class="field"><label for="pDescIn">Description</label><textarea id="pDescIn" rows="3" placeholder="What is this plan for?"></textarea></div>
+  <div class="modal-actions"><button class="btn-ghost" id="planCancel">Cancel</button><button class="btn-primary" id="planSave">Save plan</button></div>
+</dialog>
+
+<dialog id="taskModal">
+  <h3 id="taskModalTitle">Add task</h3>
+  <div class="field"><label for="fTask">Task</label><input id="fTask" type="text" placeholder="What needs to be done?"></div>
+  <div class="field"><label for="fOwner">Owner</label><select id="fOwner"></select></div>
+  <div class="field-row">
+    <div class="field"><label for="fStart">Start date</label><input id="fStart" type="date"></div>
+    <div class="field"><label for="fEnd">Due date</label><input id="fEnd" type="date"></div>
+  </div>
+  <div class="field"><label for="fStatus">Status</label><select id="fStatus"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></div>
+  <div class="field"><label for="fNotes">Notes (optional)</label><textarea id="fNotes" rows="2"></textarea></div>
+  <div class="modal-actions"><button class="btn-ghost" id="taskCancel">Cancel</button><button class="btn-primary" id="taskSave">Save task</button></div>
+</dialog>
+
+<dialog id="attModal">
+  <h3>Add file link</h3>
+  <div class="field"><label for="aType">Type</label><select id="aType"><option value="video">Video</option><option value="audio">Audio</option><option value="image">Image</option><option value="doc">Document</option><option value="link">Other link</option></select></div>
+  <div class="field"><label for="aLabel">Label</label><input id="aLabel" type="text" placeholder="e.g. Final edit v2"></div>
+  <div class="field"><label for="aUrl">Link (Google Drive, Frame.io, etc.)</label><input id="aUrl" type="url" placeholder="https://"></div>
+  <div class="modal-actions"><button class="btn-ghost" id="attCancel">Cancel</button><button class="btn-primary" id="attSave">Add link</button></div>
+</dialog>
+
+<dialog id="memberModal">
+  <h3 id="memberModalTitle">Add team member</h3>
+  <div class="field"><label for="mName">Name</label><input id="mName" type="text"></div>
+  <div class="field"><label for="mRole">Role</label><input id="mRole" type="text" placeholder="e.g. Video Editor"></div>
+  <div class="field"><label for="mEmail">Email</label><input id="mEmail" type="email"></div>
+  <div class="modal-actions"><button class="btn-ghost" id="memberCancel">Cancel</button><button class="btn-primary" id="memberSave">Save member</button></div>
+</dialog>
+
+<dialog id="confirmModal">
+  <h3 id="confirmTitle">Are you sure?</h3>
+  <p id="confirmMsg"></p>
+  <div class="modal-actions"><button class="btn-ghost" id="confirmNo">Cancel</button><button class="btn-danger" id="confirmYes">Yes, do it</button></div>
+</dialog>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ── Supabase ── */
+var SUPABASE_URL = "https://gbdqzspjoiogcncyaxqw.supabase.co";
+var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdiZHF6c3Bqb2lvZ2NuY3lheHF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNzc2MTMsImV4cCI6MjA2Nzk1MzYxM30.ZSIsInJlZiI6ImdiZHF6c3Bqb2lvZ2NuY3lheHF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNzc2MTMsImV4cCI6MjA2Nzk1MzYxM30.eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
+var PIN = "0710";
+var ADMIN_NAME = "keirle";
+var SESSION_KEY = "d1_user_v2";
+
+var sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+/* ── State ── */
+var currentUser = null;
+var plans = [];
+var tasks = [];
+var teamMembers = [];
+var activityLog = [];
+var activePlanId = null;
+var realtimeSub = null;
+
+/* ── Helpers ── */
+function el(id){ return document.getElementById(id); }
+function esc(s){ var d=document.createElement("div"); d.textContent=s==null?"":String(s); return d.innerHTML; }
+function isAdmin(){ return !!currentUser && currentUser.toLowerCase()===ADMIN_NAME.toLowerCase(); }
+function initials(n){ return (n||"?").trim().split(/\s+/).map(function(w){return w[0];}).slice(0,2).join("").toUpperCase(); }
+function fmtDate(iso){ if(!iso) return "\u2014"; var p=iso.split("-"); if(p.length<3) return iso; var m=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]; return m[parseInt(p[1],10)-1]+" "+parseInt(p[2],10)+", "+p[0]; }
+function timeAgo(iso){ var d=(Date.now()-new Date(iso).getTime())/1000; if(d<60)return"just now"; if(d<3600)return Math.floor(d/60)+"m ago"; if(d<86400)return Math.floor(d/3600)+"h ago"; return Math.floor(d/86400)+"d ago"; }
+function scls(s){ if(s==="Completed")return"completed"; if(s==="In Progress")return"inprogress"; return"notstarted"; }
+function attTypeLabel(t){ return {video:"VIDEO",audio:"AUDIO",image:"IMAGE",doc:"DOC",link:"LINK"}[t]||"LINK"; }
+
+/* Toast */
+var toastTimer;
+function toast(msg, type){
+  var t=el("toast"); t.textContent=msg; t.className="toast "+(type||"");
+  requestAnimationFrame(function(){ t.classList.add("show"); });
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(function(){ t.classList.remove("show"); },3000);
+}
+
+/* Confirm dialog */
+var confirmCb=null;
+function showConfirm(title,msg,onYes){
+  el("confirmTitle").textContent=title; el("confirmMsg").textContent=msg||"";
+  confirmCb=onYes; el("confirmModal").showModal();
+}
+el("confirmNo").addEventListener("click",function(){ confirmCb=null; el("confirmModal").close(); });
+el("confirmYes").addEventListener("click",function(){ var cb=confirmCb; confirmCb=null; el("confirmModal").close(); if(cb)cb(); });
+
+/* ── Boot ── */
+async function boot(){
+  // check session
+  try{ currentUser=sessionStorage.getItem(SESSION_KEY); }catch(e){}
+
+  // load data
+  await loadAll();
+  hideLoading();
+
+  if(currentUser){ showApp(); }
+  else{ showLogin(); }
+
+  subscribeRealtime();
+}
+
+async function loadAll(){
+  var [pr,tr,mr,ar] = await Promise.all([
+    sb.from("plans").select("*").order("created_at"),
+    sb.from("tasks").select("*").order("created_at"),
+    sb.from("team").select("*").order("created_at"),
+    sb.from("activity").select("*").order("created_at",{ascending:false}).limit(30)
+  ]);
+  plans = pr.data||[];
+  tasks = tr.data||[];
+  teamMembers = mr.data||[];
+  activityLog = ar.data||[];
+  if(!activePlanId && plans.length) activePlanId=plans[0].id;
+}
+
+function hideLoading(){ el("loadingScreen").style.display="none"; }
+
+/* ── Real-time ── */
+function subscribeRealtime(){
+  if(realtimeSub) sb.removeChannel(realtimeSub);
+  realtimeSub = sb.channel("db-changes")
+    .on("postgres_changes",{event:"*",schema:"public",table:"plans"},handleChange)
+    .on("postgres_changes",{event:"*",schema:"public",table:"tasks"},handleChange)
+    .on("postgres_changes",{event:"*",schema:"public",table:"team"},handleChange)
+    .on("postgres_changes",{event:"*",schema:"public",table:"activity"},handleChange)
+    .subscribe();
+}
+
+async function handleChange(){
+  await loadAll();
+  renderAll();
+}
+
+/* ── Login ── */
+function buildLoginSelect(){
+  var sel=el("loginName"); sel.innerHTML="";
+  teamMembers.forEach(function(m){
+    var o=document.createElement("option"); o.value=m.name; o.textContent=m.name; sel.appendChild(o);
+  });
+  var add=document.createElement("option"); add.value="__new__"; add.textContent=teamMembers.length?"+ I'm new here":"+ Add my name"; sel.appendChild(add);
+  toggleNewName();
+}
+function toggleNewName(){ el("newNameField").style.display=el("loginName").value==="__new__"?"":"none"; }
+el("loginName").addEventListener("change",toggleNewName);
+
+function showLogin(){ buildLoginSelect(); el("loginScreen").style.display="flex"; }
+
+async function doLogin(){
+  el("loginError").textContent="";
+  var pin=el("pinInput").value.trim();
+  if(pin!==PIN){ el("loginError").textContent="Wrong PIN. Try again."; el("pinInput").value=""; el("pinInput").focus(); return; }
+  var name;
+  if(el("loginName").value==="__new__"){
+    name=el("loginNewName").value.trim();
+    if(!name){ el("loginError").textContent="Please type your name."; el("loginNewName").focus(); return; }
+    var exists=teamMembers.some(function(m){ return m.name.toLowerCase()===name.toLowerCase(); });
+    if(!exists){
+      var {error}=await sb.from("team").insert({name:name,role:"Member",email:""});
+      if(error){ el("loginError").textContent="Error saving your name. Try again."; return; }
+      await logActivity(name,"joined the team");
+      await loadAll();
+    }
+  } else {
+    name=el("loginName").value;
+  }
+  currentUser=name;
+  try{ sessionStorage.setItem(SESSION_KEY,name); }catch(e){}
+  el("loginScreen").style.display="none";
+  showApp();
+}
+el("loginBtn").addEventListener("click",doLogin);
+el("pinInput").addEventListener("keydown",function(e){ if(e.key==="Enter") doLogin(); });
+el("loginNewName").addEventListener("keydown",function(e){ if(e.key==="Enter") doLogin(); });
+
+/* ── App ── */
+function showApp(){
+  el("app").style.display="block";
+  var m=teamMembers.find(function(x){ return x.name===currentUser; });
+  el("userName").textContent=currentUser;
+  el("userRole").textContent=isAdmin()?"Admin":(m&&m.role?m.role:"Member");
+  el("userAvatar").textContent=initials(currentUser);
+  document.body.classList.toggle("is-admin",isAdmin());
+  renderAll();
+}
+
+el("logoutBtn").addEventListener("click",function(){
+  try{ sessionStorage.removeItem(SESSION_KEY); }catch(e){}
+  currentUser=null;
+  document.body.classList.remove("is-admin");
+  el("app").style.display="none";
+  el("pinInput").value="";
+  showLogin();
+});
+
+/* ── Navigation ── */
+var viewMeta={dashboard:{title:"Dashboard",sub:"Overview of all plans"},plans:{title:"Plans & Tasks",sub:"Manage plans, tasks, and deliverables"},team:{title:"Team",sub:"Who can log in and own tasks"}};
+function setView(v){
+  ["dashboard","plans","team"].forEach(function(x){ el("view-"+x).hidden=x!==v; });
+  document.querySelectorAll(".nav button").forEach(function(b){ b.classList.toggle("active",b.dataset.view===v); });
+  el("pageTitle").textContent=viewMeta[v].title;
+  el("sidebar").classList.remove("open");
+}
+document.querySelectorAll(".nav button").forEach(function(b){ b.addEventListener("click",function(){ setView(b.dataset.view); }); });
+el("menuToggle").addEventListener("click",function(){ el("sidebar").classList.toggle("open"); });
+
+/* ── Activity ── */
+async function logActivity(user,action){
+  await sb.from("activity").insert({username:user||currentUser,action:action});
+}
+
+/* ── Render ── */
+function renderAll(){ renderDashboard(); renderPlans(); renderTeam(); }
+
+function taskCounts(arr){
+  var c={total:arr.length,done:0,prog:0,not:0};
+  arr.forEach(function(t){ if(t.status==="Completed")c.done++; else if(t.status==="In Progress")c.prog++; else c.not++; });
+  return c;
+}
+
+function renderDashboard(){
+  var c=taskCounts(tasks);
+  el("dTotal").textContent=c.total; el("dDone").textContent=c.done; el("dProg").textContent=c.prog; el("dNot").textContent=c.not;
+  var wrap=el("dashPlans"); wrap.innerHTML="";
+  plans.forEach(function(p){
+    var pt=tasks.filter(function(t){ return t.plan_id===p.id; });
+    var pc=taskCounts(pt); var pct=pc.total?Math.round(pc.done/pc.total*100):0;
+    var row=document.createElement("div"); row.className="plan-row";
+    row.innerHTML='<div class="pr-top"><b>'+esc(p.name)+'</b><span>'+pc.done+"/"+pc.total+" \u00b7 "+pct+"%</span></div>"+
+      '<div class="progress-track"><div class="progress-fill" style="width:'+pct+'%"></div></div>';
+    row.addEventListener("click",function(){ activePlanId=p.id; setView("plans"); renderPlans(); });
+    wrap.appendChild(row);
+  });
+  var act=el("dashActivity"); act.innerHTML="";
+  if(!activityLog.length){ act.innerHTML='<div style="color:var(--muted);font-size:13px">No activity yet.</div>'; return; }
+  activityLog.forEach(function(a){
+    var d=document.createElement("div"); d.className="activity-item";
+    d.innerHTML='<div class="avatar">'+esc(initials(a.username))+'</div>'+
+      '<div class="a-text"><b>'+esc(a.username)+'</b> '+esc(a.action)+'</div>'+
+      '<div class="a-time">'+timeAgo(a.created_at)+'</div>';
+    act.appendChild(d);
+  });
+}
+
+function renderPlans(){
+  var sel=el("planSelect"); sel.innerHTML="";
+  if(!plans.length){
+    sel.innerHTML='<option value="">No plans yet</option>';
+    el("planTitle").textContent="No plans yet";
+    el("planDesc").textContent=""; el("planDesc").style.display="none";
+    el("taskList").innerHTML=""; el("emptyState").hidden=false;
+    return;
+  }
+  plans.forEach(function(p){
+    var o=document.createElement("option"); o.value=p.id; o.textContent=p.name;
+    if(p.id===activePlanId) o.selected=true; sel.appendChild(o);
+  });
+  var plan=plans.find(function(p){ return p.id===activePlanId; })||plans[0];
+  if(!plan) return;
+  activePlanId=plan.id;
+  el("planTitle").textContent=plan.name;
+  el("planDesc").textContent=plan.description||"";
+  el("planDesc").style.display=plan.description?"":"none";
+
+  var pt=tasks.filter(function(t){ return t.plan_id===plan.id; });
+  var c=taskCounts(pt); var pct=c.total?Math.round(c.done/c.total*100):0;
+  el("pTotal").textContent=c.total; el("pDone").textContent=c.done; el("pProg").textContent=c.prog; el("pNot").textContent=c.not;
+  el("progressFill").style.width=pct+"%"; el("progressPct").textContent=pct+"%"; el("progressCount").textContent=c.done+" / "+c.total+" completed";
+
+  var q=el("searchInput").value.toLowerCase(); var sf=el("statusFilter").value;
+  var filtered=pt.filter(function(t){
+    if(sf&&t.status!==sf) return false;
+    if(q&&(t.title+" "+(t.owner||"")+" "+(t.notes||"")).toLowerCase().indexOf(q)===-1) return false;
+    return true;
+  });
+
+  var list=el("taskList");
+  var openIds={};
+  list.querySelectorAll(".task-card.open").forEach(function(c){ openIds[c.dataset.id]=true; });
+  list.innerHTML="";
+
+  filtered.forEach(function(t){
+    var atts=Array.isArray(t.attachments)?t.attachments:[];
+    var attHtml="";
+    atts.forEach(function(a){
+      attHtml+='<div class="att-item">'+
+        '<span class="att-type '+esc(a.type)+'">'+attTypeLabel(a.type)+'</span>'+
+        '<a href="'+esc(a.url)+'" target="_blank" rel="noopener">'+esc(a.label||a.url)+'</a>'+
+        '<span class="att-by">by '+esc(a.addedBy||"")+'</span>'+
+        '<button class="rm" data-delatt="'+t.id+':'+a.id+'">\u00d7</button>'+
+      '</div>';
+    });
+    var card=document.createElement("div");
+    card.className="task-card"+(t.status==="Completed"?" completed-card":"")+(openIds[t.id]?" open":"");
+    card.dataset.id=t.id;
+    card.innerHTML=
+      '<div class="task-top" data-toggle="'+t.id+'">'+
+        '<span class="chev">&#9658;</span>'+
+        '<div class="task-info">'+
+          '<div class="task-title">'+esc(t.title)+'</div>'+
+          '<div class="task-meta">Owner: <b>'+esc(t.owner||"\u2014")+'</b>'+(t.end_date?' \u00b7 due '+fmtDate(t.end_date):'')+
+            (atts.length?'<span class="att-count">'+atts.length+' file link'+(atts.length>1?'s':'')+'</span>':'')+
+          '</div>'+
+        '</div>'+
+        '<span class="pill '+scls(t.status)+'">'+esc(t.status)+'</span>'+
+      '</div>'+
+      '<div class="task-body">'+
+        (t.notes?'<div class="task-notes">'+esc(t.notes)+'</div>':'')+
+        '<div class="task-dates">Start: '+fmtDate(t.start_date)+' \u00b7 Due: '+fmtDate(t.end_date)+'</div>'+
+        (atts.length?'<div class="att-list">'+attHtml+'</div>':'')+
+        '<div class="task-actions">'+
+          '<button class="btn-ghost" data-addatt="'+t.id+'">+ File link</button>'+
+          (t.status!=="Completed"?'<button class="btn-green" data-complete="'+t.id+'">Mark completed</button>':'')+
+          '<button class="btn-ghost" data-edit="'+t.id+'">Edit</button>'+
+          (isAdmin()?'<button class="btn-danger" data-del="'+t.id+'">Delete</button>':'')+
+        '</div>'+
+        (t.status==="Completed"&&t.completed_by?'<div class="done-by">Completed by '+esc(t.completed_by)+(t.completed_at?' \u00b7 '+fmtDate(t.completed_at.slice(0,10)):'')+' </div>':'')+
+      '</div>';
+    list.appendChild(card);
+  });
+  el("emptyState").hidden=filtered.length>0;
+}
+
+function renderTeam(){
+  var grid=el("teamGrid"); grid.innerHTML="";
+  if(!teamMembers.length){ grid.innerHTML='<div style="color:var(--muted)">No team members yet.</div>'; return; }
+  teamMembers.forEach(function(m){
+    var isMe=m.name===currentUser;
+    var mIsAdmin=m.name.toLowerCase()===ADMIN_NAME.toLowerCase();
+    var canManage=isMe||isAdmin();
+    var card=document.createElement("div"); card.className="member"+(isMe?" me":"");
+    card.innerHTML=
+      (canManage?
+        '<div class="card-actions">'+
+          '<button data-editmember="'+m.id+'">Edit</button>'+
+          (!mIsAdmin?'<button class="rm" data-delmember="'+m.id+'">\u00d7</button>':'')+
+        '</div>':'')+
+      '<div class="name">'+esc(m.name)+
+        (mIsAdmin?' <span class="role-badge">ADMIN</span>':'')+
+        (isMe?' <span class="you-tag">You</span>':'')+
+      '</div>'+
+      '<div class="role">'+esc(mIsAdmin?"Admin":(m.role||"Member"))+'</div>'+
+      (m.email?'<div class="detail">'+esc(m.email)+'</div>':'');
+    grid.appendChild(card);
+  });
+}
+
+/* ── Plan CRUD ── */
+el("planSelect").addEventListener("change",function(){ activePlanId=this.value; renderPlans(); });
+
+var editingPlanId=null;
+el("newPlanBtn").addEventListener("click",function(){
+  if(!isAdmin()) return;
+  editingPlanId=null; el("planModalTitle").textContent="New plan";
+  el("pName").value=""; el("pDescIn").value="";
+  el("planModal").showModal(); el("pName").focus();
+});
+el("editPlanBtn").addEventListener("click",function(){
+  if(!isAdmin()) return;
+  var plan=plans.find(function(p){ return p.id===activePlanId; }); if(!plan) return;
+  editingPlanId=plan.id; el("planModalTitle").textContent="Edit plan";
+  el("pName").value=plan.name; el("pDescIn").value=plan.description||"";
+  el("planModal").showModal(); el("pName").focus();
+});
+el("planCancel").addEventListener("click",function(){ el("planModal").close(); });
+el("planSave").addEventListener("click",async function(){
+  if(!isAdmin()) return;
+  var name=el("pName").value.trim(); if(!name){ el("pName").focus(); return; }
+  var desc=el("pDescIn").value.trim();
+  if(editingPlanId){
+    var {error}=await sb.from("plans").update({name:name,description:desc,updated_at:new Date().toISOString()}).eq("id",editingPlanId);
+    if(error){ toast("Error saving plan","error"); return; }
+    await logActivity(currentUser,'updated plan "'+name+'"');
+  } else {
+    var {data,error}=await sb.from("plans").insert({name:name,description:desc}).select().single();
+    if(error){ toast("Error creating plan","error"); return; }
+    activePlanId=data.id;
+    await logActivity(currentUser,'created plan "'+name+'"');
+  }
+  el("planModal").close();
+  toast("Plan saved","success");
+  await loadAll(); renderAll();
+});
+el("deletePlanBtn").addEventListener("click",function(){
+  if(!isAdmin()) return;
+  var plan=plans.find(function(p){ return p.id===activePlanId; }); if(!plan) return;
+  showConfirm('Delete "'+plan.name+'"?','This deletes the plan and all its tasks.',async function(){
+    var {error}=await sb.from("plans").delete().eq("id",plan.id);
+    if(error){ toast("Error deleting plan","error"); return; }
+    await logActivity(currentUser,'deleted plan "'+plan.name+'"');
+    activePlanId=null; toast("Plan deleted","success"); await loadAll(); renderAll();
+  });
+});
+
+/* ── Task CRUD ── */
+var editingTaskId=null;
+function fillOwnerSelect(sel,selected){
+  sel.innerHTML='<option value="">\u2014 Unassigned \u2014</option>';
+  teamMembers.forEach(function(m){ var o=document.createElement("option"); o.value=m.name; o.textContent=m.name; if(m.name===selected) o.selected=true; sel.appendChild(o); });
+}
+window.openTaskModal=function(id){
+  editingTaskId=id||null;
+  el("taskModalTitle").textContent=editingTaskId?"Edit task":"Add task";
+  if(editingTaskId){
+    var t=tasks.find(function(x){ return x.id===editingTaskId; }); if(!t) return;
+    fillOwnerSelect(el("fOwner"),t.owner||"");
+    el("fTask").value=t.title; el("fStart").value=t.start_date||""; el("fEnd").value=t.end_date||"";
+    el("fStatus").value=t.status; el("fNotes").value=t.notes||"";
+  } else {
+    fillOwnerSelect(el("fOwner"),currentUser);
+    el("fTask").value=""; el("fStart").value=""; el("fEnd").value=""; el("fStatus").value="Not Started"; el("fNotes").value="";
+  }
+  el("taskModal").showModal(); el("fTask").focus();
+};
+el("addTaskBtn").addEventListener("click",function(){ openTaskModal(); });
+el("taskCancel").addEventListener("click",function(){ el("taskModal").close(); });
+el("taskSave").addEventListener("click",async function(){
+  var name=el("fTask").value.trim(); if(!name){ el("fTask").focus(); return; }
+  var status=el("fStatus").value;
+  var payload={
+    title:name, owner:el("fOwner").value, start_date:el("fStart").value||null,
+    end_date:el("fEnd").value||null, status:status, notes:el("fNotes").value.trim(),
+    updated_at:new Date().toISOString()
+  };
+  if(status==="Completed"){ payload.completed_by=currentUser; payload.completed_at=new Date().toISOString(); }
+  else { payload.completed_by=null; payload.completed_at=null; }
+
+  if(editingTaskId){
+    var {error}=await sb.from("tasks").update(payload).eq("id",editingTaskId);
+    if(error){ toast("Error saving task","error"); return; }
+    await logActivity(currentUser,'updated task "'+name+'"');
+  } else {
+    payload.plan_id=activePlanId; payload.created_by=currentUser; payload.attachments=[];
+    var {error}=await sb.from("tasks").insert(payload);
+    if(error){ toast("Error creating task","error"); return; }
+    await logActivity(currentUser,'added task "'+name+'"');
+  }
+  el("taskModal").close(); toast("Task saved","success"); await loadAll(); renderAll();
+});
+
+/* ── Attachment ── */
+var attTaskId=null;
+el("attCancel").addEventListener("click",function(){ el("attModal").close(); });
+el("attSave").addEventListener("click",async function(){
+  var url=el("aUrl").value.trim(); if(!url){ el("aUrl").focus(); return; }
+  if(!/^https?:\/\//i.test(url)) url="https://"+url;
+  var t=tasks.find(function(x){ return x.id===attTaskId; }); if(!t) return;
+  var atts=Array.isArray(t.attachments)?[...t.attachments]:[];
+  atts.push({id:Date.now(),type:el("aType").value,label:el("aLabel").value.trim(),url:url,addedBy:currentUser,addedAt:new Date().toISOString()});
+  var {error}=await sb.from("tasks").update({attachments:atts}).eq("id",attTaskId);
+  if(error){ toast("Error adding link","error"); return; }
+  await logActivity(currentUser,'added a '+el("aType").value+' link to "'+t.title+'"');
+  el("attModal").close(); toast("Link added","success"); await loadAll(); renderAll();
+});
+
+/* ── Team CRUD ── */
+var editingMemberId=null;
+el("addMemberBtn").addEventListener("click",function(){
+  if(!isAdmin()) return;
+  editingMemberId=null; el("memberModalTitle").textContent="Add team member";
+  el("mName").value=""; el("mRole").value=""; el("mEmail").value="";
+  el("memberModal").showModal(); el("mName").focus();
+});
+el("memberCancel").addEventListener("click",function(){ el("memberModal").close(); });
+el("memberSave").addEventListener("click",async function(){
+  var name=el("mName").value.trim(); if(!name){ el("mName").focus(); return; }
+  var role=el("mRole").value.trim()||"Member"; var email=el("mEmail").value.trim();
+  if(editingMemberId){
+    var {error}=await sb.from("team").update({name:name,role:role,email:email}).eq("id",editingMemberId);
+    if(error){ toast("Error saving member","error"); return; }
+    if(currentUser&&name!==currentUser){
+      // name changed — update session
+      var oldName=currentUser; currentUser=name;
+      try{ sessionStorage.setItem(SESSION_KEY,name); }catch(e){}
+      el("userName").textContent=name; el("userAvatar").textContent=initials(name);
+    }
+    await logActivity(currentUser,'updated their profile');
+  } else {
+    var {error}=await sb.from("team").insert({name:name,role:role,email:email});
+    if(error){ toast("Error adding member","error"); return; }
+    await logActivity(currentUser,'added member "'+name+'"');
+  }
+  el("memberModal").close(); toast("Saved","success"); await loadAll(); renderAll();
+});
+
+/* ── Delegated clicks ── */
+document.addEventListener("click",async function(e){
+  var toggle=e.target.closest&&e.target.closest("[data-toggle]");
+  if(toggle&&!e.target.closest("button")){ toggle.parentElement.classList.toggle("open"); return; }
+  var btn=e.target.closest&&e.target.closest("button"); if(!btn) return;
+
+  if(btn.dataset.edit){ openTaskModal(btn.dataset.edit); }
+
+  if(btn.dataset.del&&isAdmin()){
+    var t=tasks.find(function(x){ return x.id===btn.dataset.del; });
+    if(t) showConfirm('Delete this task?','"'+t.title+'" will be removed.',async function(){
+      await sb.from("tasks").delete().eq("id",t.id);
+      await logActivity(currentUser,'deleted task "'+t.title+'"');
+      toast("Task deleted","success"); await loadAll(); renderAll();
+    });
+  }
+
+  if(btn.dataset.complete){
+    var t=tasks.find(function(x){ return x.id===btn.dataset.complete; });
+    if(t){
+      await sb.from("tasks").update({status:"Completed",completed_by:currentUser,completed_at:new Date().toISOString()}).eq("id",t.id);
+      await logActivity(currentUser,'completed "'+t.title+'"');
+      toast("Marked as completed","success"); await loadAll(); renderAll();
+    }
+  }
+
+  if(btn.dataset.addatt){
+    attTaskId=btn.dataset.addatt; el("aType").value="video"; el("aLabel").value=""; el("aUrl").value="";
+    el("attModal").showModal(); el("aLabel").focus();
+  }
+
+  if(btn.dataset.delatt){
+    var parts=btn.dataset.delatt.split(":");
+    var tid=parts[0]; var aid=parseInt(parts[1],10);
+    var t=tasks.find(function(x){ return x.id===tid; });
+    if(t){
+      showConfirm("Remove this link?","The file itself is not affected.",async function(){
+        var atts=(t.attachments||[]).filter(function(a){ return a.id!==aid; });
+        await sb.from("tasks").update({attachments:atts}).eq("id",tid);
+        toast("Link removed","success"); await loadAll(); renderAll();
+      });
+    }
+  }
+
+  if(btn.dataset.editmember){
+    var m=teamMembers.find(function(x){ return x.id===btn.dataset.editmember; });
+    if(m&&(m.name===currentUser||isAdmin())){
+      editingMemberId=m.id; el("memberModalTitle").textContent="Edit team member";
+      el("mName").value=m.name; el("mRole").value=m.role||""; el("mEmail").value=m.email||"";
+      el("memberModal").showModal(); el("mName").focus();
+    }
+  }
+
+  if(btn.dataset.delmember){
+    var m=teamMembers.find(function(x){ return x.id===btn.dataset.delmember; });
+    if(!m||m.name.toLowerCase()===ADMIN_NAME.toLowerCase()) return;
+    var isSelf=m.name===currentUser;
+    var canDel=isSelf||isAdmin();
+    if(!canDel) return;
+    showConfirm('Remove "'+m.name+'"?',isSelf?'You will be logged out.':'They will be removed from the team.',async function(){
+      await sb.from("team").delete().eq("id",m.id);
+      await logActivity(currentUser,'removed "'+m.name+'" from the team');
+      toast("Member removed","success"); await loadAll();
+      if(isSelf) el("logoutBtn").click(); else renderAll();
+    });
+  }
+});
+
+el("searchInput").addEventListener("input",renderPlans);
+el("statusFilter").addEventListener("change",renderPlans);
+
+boot();
+})();
+</script>
+</body>
+</html>
