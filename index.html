@@ -22,7 +22,12 @@ body.light{
   --input:#f7f8fb;--shadow:0 1px 2px rgba(24,28,45,.05),0 4px 16px rgba(24,28,45,.06);
   --hover:rgba(30,35,60,.04);--backdrop:rgba(30,34,52,.35);
 }
-*{margin:0;padding:0;box-sizing:border-box}
+*{margin:0;padding:0;box-sizing:border-box;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px;border:2px solid var(--panel)}
+::-webkit-scrollbar-thumb:hover{background:var(--muted)}
+::-webkit-scrollbar-corner{background:transparent}
 body{background:var(--bg);color:var(--text);font-family:'Poppins',sans-serif;font-size:14px;line-height:1.55;min-height:100vh}
 ::selection{background:rgba(62,207,142,.3)}
 button{font-family:'Poppins',sans-serif;font-weight:500;font-size:13.5px;border:none;border-radius:6px;padding:9px 16px;cursor:pointer;transition:background .12s,border-color .12s,color .12s,transform .12s}
@@ -200,6 +205,7 @@ body.is-admin .admin-only{display:inline-flex}
 .brief-add-field-form{display:none;gap:8px;margin-top:10px;flex-wrap:wrap}
 .brief-add-field-form.show{display:flex}
 .brief-add-field-form input{flex:1;min-width:140px}
+#briefOverviewInput,#briefNotesInput{overflow:hidden;resize:none;min-height:80px}
 .brief-text{font-size:13.5px;color:#c3c9d8;white-space:pre-wrap;line-height:1.65}
 .brief-text.empty-hint{color:var(--muted);font-style:italic}
 .brief-script-table{border:1px solid var(--line);border-radius:10px;overflow:hidden}
@@ -207,7 +213,7 @@ body.is-admin .admin-only{display:inline-flex}
 .brief-script-row:last-child{border-bottom:none}
 .brief-script-row.head{background:var(--panel-2)}
 .brief-script-row.head div{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:9px 14px}
-.brief-script-row textarea{border:none;border-radius:0;background:transparent;padding:12px 14px;font-size:13px;min-height:60px}
+.brief-script-row textarea{border:none;border-radius:0;background:transparent;padding:12px 14px;font-size:13px;min-height:60px;overflow:hidden;resize:none}
 .brief-script-row textarea:focus-visible{outline:none;background:rgba(124,108,245,.06)}
 .brief-script-row .bs-rm{display:flex;align-items:center;justify-content:center;padding:0 10px;background:none;border:none;color:var(--muted)}
 .brief-script-row .bs-rm:hover{color:var(--rose)}
@@ -510,6 +516,7 @@ dialog[open]{animation:pop .18s ease}
     <div id="briefDoneBy"></div>
     <div class="brief-footer-actions">
       <button class="btn-review" id="briefReviewBtn">Submit for review</button>
+      <button class="btn-ghost admin-only" id="briefSendBackBtn">Send back to In Progress</button>
       <button class="btn-green admin-only" id="briefCompleteBtn">Mark completed</button>
       <button class="btn-ghost admin-only" id="briefEditDetailsBtn">Edit details</button>
       <button class="btn-danger admin-only" id="briefDeleteBtn">Delete task</button>
@@ -584,6 +591,7 @@ function scls(st){ if(st==="Completed")return"completed"; if(st==="In Progress")
 function attTypeLabel(t){ return {video:"VIDEO",audio:"AUDIO",image:"IMAGE",doc:"DOC",link:"LINK"}[t]||"LINK"; }
 function findItem(id){ return items.find(function(x){ return x.id===id; }); }
 function itemsOf(taskId){ return items.filter(function(i){ return i.task_id===taskId; }); }
+function autoGrow(ta){ ta.style.height="auto"; ta.style.height=(ta.scrollHeight+2)+"px"; }
 
 /* ── Theme ── */
 function applyTheme(mode){
@@ -1066,6 +1074,7 @@ function renderBrief(){
     });
     html+='</div>';
     st.innerHTML=html;
+    st.querySelectorAll("textarea").forEach(autoGrow);
   }
 
   var atts=Array.isArray(t.attachments)?t.attachments:[];
@@ -1098,6 +1107,7 @@ function renderBrief(){
     : (t.status==="Needs Review" ? "Waiting for review" : "");
   el("briefCompleteBtn").style.display = t.status==="Completed" ? "none" : "";
   el("briefReviewBtn").style.display = (t.status==="Completed"||t.status==="Needs Review") ? "none" : "";
+  el("briefSendBackBtn").style.display = t.status==="Needs Review" ? "" : "none";
 }
 
 /* Fields */
@@ -1121,6 +1131,7 @@ el("bfSave").addEventListener("click",async function(){
 el("briefEditOverviewBtn").addEventListener("click",function(){
   if(!isAdmin()) return;
   el("briefOverviewView").style.display="none"; el("briefOverviewEdit").style.display="";
+  autoGrow(el("briefOverviewInput"));
   el("briefOverviewInput").focus();
 });
 el("briefOverviewCancel").addEventListener("click",function(){
@@ -1140,6 +1151,7 @@ el("briefOverviewSave").addEventListener("click",async function(){
 el("briefEditNotesBtn").addEventListener("click",function(){
   if(!isAdmin()) return;
   el("briefNotesView").style.display="none"; el("briefNotesEdit").style.display="";
+  autoGrow(el("briefNotesInput"));
   el("briefNotesInput").focus();
 });
 el("briefNotesCancel").addEventListener("click",function(){
@@ -1206,6 +1218,14 @@ el("briefReviewBtn").addEventListener("click",async function(){
   if(res.error){ toast("Error submitting for review","error"); return; }
   await logActivity(currentUser,'submitted "'+t.title+'" for review');
   toast("Submitted for review","success"); await loadAll(); renderAll();
+});
+el("briefSendBackBtn").addEventListener("click",async function(){
+  if(!isAdmin()) return;
+  var t=findItem(currentBriefItemId); if(!t) return;
+  var res=await sb.from("subtasks").update({status:"In Progress",updated_at:new Date().toISOString()}).eq("id",t.id);
+  if(res.error){ toast("Error sending back","error"); return; }
+  await logActivity(currentUser,'sent "'+t.title+'" back for changes');
+  toast("Sent back to In Progress","success"); await loadAll(); renderAll();
 });
 el("briefCompleteBtn").addEventListener("click",async function(){
   if(!isAdmin()) return;
@@ -1356,6 +1376,10 @@ document.addEventListener("click",async function(e){
       if(isSelf) el("logoutBtn").click(); else renderAll();
     });
   }
+});
+
+document.addEventListener("input",function(e){
+  if(e.target && e.target.matches && e.target.matches("[data-scriptcell], #briefOverviewInput, #briefNotesInput")) autoGrow(e.target);
 });
 
 el("searchInput").addEventListener("input",renderPlans);
