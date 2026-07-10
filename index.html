@@ -641,6 +641,12 @@ async function boot(){
   try{ currentUser=sessionStorage.getItem(SESSION_KEY); }catch(e){}
   await ensureAdmin();
   await loadAll();
+  // catch-up: fix any task whose status drifted from its items (e.g. data from before auto-sync)
+  var drift=false;
+  for(var ti=0; ti<tasks.length; ti++){
+    if(await syncTaskStatus(tasks[ti].id)) drift=true;
+  }
+  if(drift) await loadAll();
   el("loadingScreen").style.display="none";
   if(currentUser){ showApp(); } else { showLogin(); }
   subscribeRealtime();
@@ -674,6 +680,34 @@ function subscribeRealtime(){
     .subscribe();
 }
 async function handleChange(){ await loadAll(); renderAll(); }
+
+/* Task status is derived from its items whenever items exist:
+   all Completed -> Completed; any Needs Review -> Needs Review;
+   any progress -> In Progress; else Not Started. No items -> manual. */
+async function syncTaskStatus(taskId){
+  if(!taskId) return false;
+  var t=tasks.find(function(x){ return x.id===taskId; }); if(!t) return false;
+  var kids=itemsOf(taskId);
+  if(!kids.length) return false;
+  var newStatus;
+  if(kids.every(function(i){ return i.status==="Completed"; })) newStatus="Completed";
+  else if(kids.some(function(i){ return i.status==="Needs Review"; })) newStatus="Needs Review";
+  else if(kids.some(function(i){ return i.status==="In Progress"||i.status==="Completed"; })) newStatus="In Progress";
+  else newStatus="Not Started";
+  if(t.status===newStatus) return false;
+  var payload={status:newStatus,updated_at:new Date().toISOString()};
+  if(newStatus==="Completed"){ payload.completed_by=currentUser; payload.completed_at=new Date().toISOString(); }
+  else { payload.completed_by=null; payload.completed_at=null; }
+  var res=await sb.from("tasks").update(payload).eq("id",taskId);
+  return !res.error;
+}
+
+async function refreshAndSync(taskId){
+  await loadAll();
+  var changed=await syncTaskStatus(taskId);
+  if(changed) await loadAll();
+  renderAll();
+}
 
 /* ── Login ── */
 function buildLoginSelect(){
@@ -1014,7 +1048,7 @@ el("itemSave").addEventListener("click",async function(){
     if(res2.error){ toast("Error adding item","error"); return; }
     await logActivity(currentUser,'added item "'+title+'"');
   }
-  el("itemModal").close(); toast("Item saved","success"); await loadAll(); renderAll();
+  el("itemModal").close(); toast("Item saved","success"); await refreshAndSync(itemTaskId||(editingItemId&&(findItem(editingItemId)||{}).task_id));
 });
 
 /* ================= ITEM BRIEF ================= */
@@ -1219,7 +1253,7 @@ el("briefReviewBtn").addEventListener("click",async function(){
   var res=await sb.from("subtasks").update({status:"Needs Review",updated_at:new Date().toISOString()}).eq("id",t.id);
   if(res.error){ toast("Error submitting for review","error"); return; }
   await logActivity(currentUser,'submitted "'+t.title+'" for review');
-  toast("Submitted for review","success"); await loadAll(); renderAll();
+  toast("Submitted for review","success"); await refreshAndSync(t.task_id);
 });
 el("briefSendBackBtn").addEventListener("click",async function(){
   if(!isAdmin()) return;
@@ -1227,14 +1261,14 @@ el("briefSendBackBtn").addEventListener("click",async function(){
   var res=await sb.from("subtasks").update({status:"In Progress",updated_at:new Date().toISOString()}).eq("id",t.id);
   if(res.error){ toast("Error sending back","error"); return; }
   await logActivity(currentUser,'sent "'+t.title+'" back for changes');
-  toast("Sent back to In Progress","success"); await loadAll(); renderAll();
+  toast("Sent back to In Progress","success"); await refreshAndSync(t.task_id);
 });
 el("briefCompleteBtn").addEventListener("click",async function(){
   if(!isAdmin()) return;
   var t=findItem(currentBriefItemId); if(!t) return;
   await sb.from("subtasks").update({status:"Completed",completed_by:currentUser,completed_at:new Date().toISOString()}).eq("id",t.id);
   await logActivity(currentUser,'completed "'+t.title+'"');
-  toast("Marked as completed","success"); await loadAll(); renderAll();
+  toast("Marked as completed","success"); await refreshAndSync(t.task_id);
 });
 el("briefEditDetailsBtn").addEventListener("click",function(){
   if(!isAdmin()||!currentBriefItemId) return;
@@ -1247,11 +1281,12 @@ el("briefEditDetailsBtn").addEventListener("click",function(){
 el("briefDeleteBtn").addEventListener("click",function(){
   if(!isAdmin()) return;
   var t=findItem(currentBriefItemId); if(!t) return;
+  var parentTaskId=t.task_id;
   showConfirm('Delete this item?','"'+t.title+'" and its brief will be removed.',async function(){
     await sb.from("subtasks").delete().eq("id",t.id);
     await logActivity(currentUser,'deleted item "'+t.title+'"');
     closeBrief();
-    toast("Item deleted","success"); await loadAll(); renderAll();
+    toast("Item deleted","success"); await refreshAndSync(parentTaskId);
   });
 });
 
