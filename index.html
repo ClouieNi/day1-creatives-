@@ -10,19 +10,22 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
-  --bg:#0b0e17;--sidebar:#0e1220;--panel:#131826;--panel-2:#1a2032;--line:#242c42;
-  --text:#e8eaf2;--muted:#8b93a8;--accent:#7c6cf5;--accent-soft:rgba(124,108,245,.14);
-  --amber:#e8a33d;--blue:#5b9df0;--green:#4fc98c;--rose:#e06a6a;--radius:12px;
+  --bg:#171717;--sidebar:#1c1c1c;--panel:#1c1c1c;--panel-2:#232323;--line:#2e2e2e;
+  --text:#ededed;--muted:#8a8a8a;--accent:#3ecf8e;--accent-soft:rgba(62,207,142,.13);
+  --amber:#f0b429;--blue:#5b9df0;--green:#3ecf8e;--rose:#f16565;--radius:8px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:var(--text);font-family:'Poppins',sans-serif;font-size:14px;line-height:1.55;min-height:100vh}
-button{font-family:'Poppins',sans-serif;font-weight:500;font-size:13.5px;border:none;border-radius:9px;padding:9px 16px;cursor:pointer;transition:all .15s}
-button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:#8d7ff7}
-.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}.btn-ghost:hover{color:var(--text);border-color:var(--muted)}
-.btn-danger{background:transparent;color:var(--rose);border:1px solid var(--line)}.btn-danger:hover{border-color:var(--rose)}
-.btn-green{background:rgba(79,201,140,.15);color:var(--green);border:1px solid rgba(79,201,140,.35)}.btn-green:hover{background:rgba(79,201,140,.25)}
-input,select,textarea{background:var(--panel-2);border:1px solid var(--line);border-radius:9px;padding:10px 12px;color:var(--text);font-family:'Poppins',sans-serif;font-size:14px;resize:vertical}
+::selection{background:rgba(62,207,142,.3)}
+button{font-family:'Poppins',sans-serif;font-weight:500;font-size:13.5px;border:none;border-radius:6px;padding:9px 16px;cursor:pointer;transition:background .12s,border-color .12s,color .12s,transform .12s}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+input:focus-visible,select:focus-visible,textarea:focus-visible{border-color:var(--accent)}
+.btn-primary{background:var(--accent);color:#0a0a0a;font-weight:600}.btn-primary:hover{background:#4ee0a0;transform:translateY(-1px)}.btn-primary:active{transform:translateY(0)}
+.btn-ghost{background:var(--panel-2);color:var(--text);border:1px solid var(--line)}.btn-ghost:hover{border-color:#454545;background:#282828}
+.btn-danger{background:transparent;color:var(--rose);border:1px solid var(--line)}.btn-danger:hover{border-color:var(--rose);background:rgba(241,101,101,.08)}
+.btn-green{background:rgba(62,207,142,.13);color:var(--green);border:1px solid rgba(62,207,142,.4)}.btn-green:hover{background:rgba(62,207,142,.22)}
+input,select,textarea{background:#141414;border:1px solid var(--line);border-radius:6px;padding:10px 12px;color:var(--text);font-family:'Poppins',sans-serif;font-size:14px;resize:vertical;transition:border-color .12s}
+input:hover,select:hover,textarea:hover{border-color:#454545}
 input[type=date]{color-scheme:dark}
 select{cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%238b93a8' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px}
 select option{background:var(--panel-2);color:var(--text)}
@@ -38,7 +41,7 @@ select option{background:var(--panel-2);color:var(--text)}
 #loginScreen{position:fixed;inset:0;background:var(--bg);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
 .login-card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:40px 36px;width:min(410px,100%);text-align:center}
 .login-logo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px}
-.logo-mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--accent),#4a9df0);display:inline-flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:14px}
+.logo-mark{width:34px;height:34px;border-radius:8px;background:var(--accent);display:inline-flex;align-items:center;justify-content:center;font-weight:700;color:#0a0a0a;font-size:14px}
 .login-logo .name{font-weight:700;font-size:20px}
 .login-sub{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:28px}
 .login-card .field{text-align:left;margin-bottom:18px}
@@ -56,13 +59,13 @@ select option{background:var(--panel-2);color:var(--text)}
 .side-logo .name{font-weight:700;font-size:16px}
 .side-sub{font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);padding:2px 18px 18px 62px}
 .user-card{margin:0 12px 20px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px}
-.avatar{width:32px;height:32px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;flex-shrink:0}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;border:1px solid rgba(62,207,142,.25)}
 .user-card .uname{font-weight:600;font-size:13.5px;line-height:1.2}
 .user-card .urole{font-size:11px;color:var(--muted)}
 .nav{flex:1;padding:0 12px}
-.nav button{display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:transparent;color:var(--muted);padding:11px 12px;border-radius:9px;margin-bottom:3px;font-weight:500}
-.nav button:hover{color:var(--text);background:rgba(255,255,255,.03)}
-.nav button.active{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.nav button{display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:transparent;color:var(--muted);padding:10px 12px;border-radius:6px;margin-bottom:2px;font-weight:500;transition:background .12s,color .12s}
+.nav button:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.nav button.active{background:var(--accent-soft);color:var(--accent);font-weight:600;border:1px solid rgba(62,207,142,.25)}
 .nav .ico{width:20px;text-align:center;font-size:15px}
 .side-bottom{padding:14px 12px;border-top:1px solid var(--line)}
 .side-bottom button{width:100%;background:transparent;color:var(--rose);text-align:left;padding:10px 12px}
@@ -87,20 +90,21 @@ body.is-admin .admin-only{display:inline-flex !important}
 
 /* stats */
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:30px}
-.stat{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;text-align:center}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;text-align:center;transition:border-color .12s}
+.stat:hover{border-color:#3a3a3a}
 .stat .num{font-size:30px;font-weight:700;line-height:1.15}
 .stat .lbl{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:6px;font-weight:600}
 .stat.c-total .num{color:var(--text)}.stat.c-done .num{color:var(--green)}.stat.c-prog .num{color:var(--blue)}.stat.c-not .num{color:var(--amber)}
 
 /* progress */
 .progress-track{height:7px;background:var(--panel-2);border-radius:4px;overflow:hidden}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),#4a9df0);border-radius:4px;transition:width .5s cubic-bezier(.22,1,.36,1)}
+.progress-fill{height:100%;background:var(--accent);border-radius:4px;transition:width .5s cubic-bezier(.22,1,.36,1)}
 
 /* pills */
 .pill{display:inline-block;font-size:11.5px;font-weight:600;padding:4px 12px;border-radius:999px;white-space:nowrap}
 .pill.notstarted{background:rgba(232,163,61,.13);color:var(--amber);border:1px solid rgba(232,163,61,.4)}
 .pill.inprogress{background:rgba(91,157,240,.13);color:var(--blue);border:1px solid rgba(91,157,240,.4)}
-.pill.completed{background:rgba(79,201,140,.13);color:var(--green);border:1px solid rgba(79,201,140,.4)}
+.pill.completed{background:rgba(62,207,142,.13);color:var(--green);border:1px solid rgba(62,207,142,.4)}
 
 /* plan bar */
 .plan-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:26px}
@@ -116,9 +120,11 @@ body.is-admin .admin-only{display:inline-flex !important}
 .toolbar input[type=search]{flex:1;min-width:170px}
 
 /* task cards */
-.task-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:12px;overflow:hidden}
+.task-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:12px;overflow:hidden;transition:border-color .12s}
+.task-card:hover{border-color:#3a3a3a}
 .task-card.completed-card{border-color:rgba(79,201,140,.25)}
-.task-top{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer}
+.task-top{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;transition:background .12s}
+.task-top:hover{background:rgba(255,255,255,.02)}
 .task-top .chev{color:var(--muted);font-size:11px;transition:transform .2s;flex-shrink:0}
 .task-card.open .chev{transform:rotate(90deg)}
 .task-info{flex:1;min-width:0}
@@ -154,8 +160,8 @@ h2.section{font-weight:600;font-size:18px;margin:0 0 16px}
 .dash-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:16px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
 .card h3{font-size:14px;font-weight:600;margin-bottom:16px}
-.plan-row{margin-bottom:14px;cursor:pointer;padding:10px;border-radius:9px}
-.plan-row:hover{background:rgba(255,255,255,.03)}
+.plan-row{margin-bottom:14px;cursor:pointer;padding:10px;border-radius:6px;transition:background .12s}
+.plan-row:hover{background:rgba(255,255,255,.04)}
 .plan-row .pr-top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:7px}
 .plan-row .pr-top b{font-weight:600}
 .plan-row .pr-top span{color:var(--muted);font-size:12px}
@@ -168,7 +174,8 @@ h2.section{font-weight:600;font-size:18px;margin:0 0 16px}
 
 /* team */
 .team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
-.member{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;position:relative}
+.member{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;position:relative;transition:border-color .12s}
+.member:hover{border-color:#3a3a3a}
 .member.me{border-color:rgba(124,108,245,.45)}
 .member .name{font-weight:600;font-size:15px}
 .member .role{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:3px 0 9px;font-weight:600}
@@ -287,7 +294,7 @@ dialog[open]{animation:pop .18s ease}
         </div>
         <div class="plan-head">
           <h2 id="planTitle">Loading...</h2>
-          <button class="btn-primary" id="addTaskBtn">+ Add task</button>
+          <button class="btn-primary admin-only" id="addTaskBtn">+ Add task</button>
         </div>
         <div class="plan-desc" id="planDesc"></div>
         <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0"></div></div>
@@ -309,8 +316,8 @@ dialog[open]{animation:pop .18s ease}
         </div>
         <div id="taskList"></div>
         <div class="empty" id="emptyState" hidden>
-          <p>No tasks here yet.</p>
-          <button class="btn-primary" onclick="openTaskModal()">+ Add the first task</button>
+          <p id="emptyMsg">No tasks here yet.</p>
+          <button class="btn-primary admin-only" onclick="openTaskModal()">+ Add the first task</button>
         </div>
       </section>
 
@@ -378,7 +385,7 @@ dialog[open]{animation:pop .18s ease}
 
 /* ── Supabase ── */
 var SUPABASE_URL = "https://gbdqzspjoiogcncyaxqw.supabase.co";
-var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdiZHF6c3Bqb2lvZ2NuY3lheHF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNzc2MTMsImV4cCI6MjA2Nzk1MzYxM30.ZSIsInJlZiI6ImdiZHF6c3Bqb2lvZ2NuY3lheHF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNzc2MTMsImV4cCI6MjA2Nzk1MzYxM30.eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
+var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdiZHF6c3Bqb2lvZ2NuY3lheHF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2MTM3NTksImV4cCI6MjA5OTE4OTc1OX0.cscL6Ht4zJuWiyXFUb2dZ0uAwVerCF0HG9LzGeuawvM";
 var PIN = "0710";
 var ADMIN_NAME = "keirle";
 var SESSION_KEY = "d1_user_v2";
@@ -423,9 +430,28 @@ el("confirmNo").addEventListener("click",function(){ confirmCb=null; el("confirm
 el("confirmYes").addEventListener("click",function(){ var cb=confirmCb; confirmCb=null; el("confirmModal").close(); if(cb)cb(); });
 
 /* ── Boot ── */
+async function ensureAdmin(){
+  try{
+    var {data} = await sb.from("team").select("id,name,role").ilike("name", ADMIN_NAME);
+    if(data && data.length){
+      // make sure role is correct
+      if(data[0].role !== "Admin"){
+        await sb.from("team").update({role:"Admin"}).eq("id", data[0].id);
+      }
+    } else {
+      await sb.from("team").insert({name:ADMIN_NAME, role:"Admin", email:""});
+    }
+  }catch(e){
+    console.error("Could not verify admin account:", e);
+  }
+}
+
 async function boot(){
   // check session
   try{ currentUser=sessionStorage.getItem(SESSION_KEY); }catch(e){}
+
+  // make sure the admin account always exists before anything else loads
+  await ensureAdmin();
 
   // load data
   await loadAll();
@@ -494,7 +520,11 @@ async function doLogin(){
     var exists=teamMembers.some(function(m){ return m.name.toLowerCase()===name.toLowerCase(); });
     if(!exists){
       var {error}=await sb.from("team").insert({name:name,role:"Member",email:""});
-      if(error){ el("loginError").textContent="Error saving your name. Try again."; return; }
+      if(error){
+        console.error("Team insert failed:", error);
+        el("loginError").textContent = error.message ? ("Couldn't save your name: " + error.message) : "Couldn't save your name. Check your connection and try again.";
+        return;
+      }
       await logActivity(name,"joined the team");
       await loadAll();
     }
@@ -648,7 +678,7 @@ function renderPlans(){
         '<div class="task-actions">'+
           '<button class="btn-ghost" data-addatt="'+t.id+'">+ File link</button>'+
           (t.status!=="Completed"?'<button class="btn-green" data-complete="'+t.id+'">Mark completed</button>':'')+
-          '<button class="btn-ghost" data-edit="'+t.id+'">Edit</button>'+
+          (isAdmin()?'<button class="btn-ghost" data-edit="'+t.id+'">Edit</button>':'')+
           (isAdmin()?'<button class="btn-danger" data-del="'+t.id+'">Delete</button>':'')+
         '</div>'+
         (t.status==="Completed"&&t.completed_by?'<div class="done-by">Completed by '+esc(t.completed_by)+(t.completed_at?' \u00b7 '+fmtDate(t.completed_at.slice(0,10)):'')+' </div>':'')+
@@ -736,6 +766,7 @@ function fillOwnerSelect(sel,selected){
   teamMembers.forEach(function(m){ var o=document.createElement("option"); o.value=m.name; o.textContent=m.name; if(m.name===selected) o.selected=true; sel.appendChild(o); });
 }
 window.openTaskModal=function(id){
+  if(!isAdmin()) return;
   editingTaskId=id||null;
   el("taskModalTitle").textContent=editingTaskId?"Edit task":"Add task";
   if(editingTaskId){
@@ -749,9 +780,10 @@ window.openTaskModal=function(id){
   }
   el("taskModal").showModal(); el("fTask").focus();
 };
-el("addTaskBtn").addEventListener("click",function(){ openTaskModal(); });
+el("addTaskBtn").addEventListener("click",function(){ if(!isAdmin()) return; openTaskModal(); });
 el("taskCancel").addEventListener("click",function(){ el("taskModal").close(); });
 el("taskSave").addEventListener("click",async function(){
+  if(!isAdmin()) return;
   var name=el("fTask").value.trim(); if(!name){ el("fTask").focus(); return; }
   var status=el("fStatus").value;
   var payload={
