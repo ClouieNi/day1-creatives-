@@ -32,6 +32,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{border-color:var
 .btn-ghost{background:var(--panel-2);color:var(--text);border:1px solid var(--line)}.btn-ghost:hover{border-color:var(--muted);background:var(--hover)}
 .btn-danger{background:transparent;color:var(--rose);border:1px solid var(--line)}.btn-danger:hover{border-color:var(--rose);background:rgba(241,101,101,.08)}
 .btn-green{background:rgba(79,201,140,.15);color:var(--green);border:1px solid rgba(79,201,140,.35)}.btn-green:hover{background:rgba(79,201,140,.25)}
+.btn-review{background:rgba(124,108,245,.13);color:var(--accent);border:1px solid rgba(124,108,245,.4)}.btn-review:hover{background:rgba(124,108,245,.22)}
 input,select,textarea{background:var(--input);border:1px solid var(--line);border-radius:8px;padding:10px 12px;color:var(--text);font-family:'Poppins',sans-serif;font-size:14px;resize:vertical;transition:border-color .12s,background .12s}
 input:hover,select:hover,textarea:hover{border-color:var(--muted)}
 input[type=date]{color-scheme:dark}
@@ -104,7 +105,7 @@ body.is-admin .admin-only{display:inline-flex}
 .stat:hover{border-color:var(--muted)}
 .stat .num{font-size:30px;font-weight:700;line-height:1.15}
 .stat .lbl{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:6px;font-weight:600}
-.stat.c-total .num{color:var(--text)}.stat.c-done .num{color:var(--green)}.stat.c-prog .num{color:var(--blue)}.stat.c-not .num{color:var(--amber)}
+.stat.c-total .num{color:var(--text)}.stat.c-done .num{color:var(--green)}.stat.c-prog .num{color:var(--blue)}.stat.c-not .num{color:var(--amber)}.stat.c-review .num{color:var(--accent)}
 
 /* progress */
 .progress-track{height:7px;background:var(--panel-2);border-radius:4px;overflow:hidden}
@@ -115,6 +116,7 @@ body.is-admin .admin-only{display:inline-flex}
 .pill.notstarted{background:rgba(232,163,61,.13);color:var(--amber);border:1px solid rgba(232,163,61,.4)}
 .pill.inprogress{background:rgba(91,157,240,.13);color:var(--blue);border:1px solid rgba(91,157,240,.4)}
 .pill.completed{background:rgba(79,201,140,.13);color:var(--green);border:1px solid rgba(79,201,140,.4)}
+.pill.needsreview{background:rgba(124,108,245,.13);color:var(--accent);border:1px solid rgba(124,108,245,.45)}
 
 /* plan bar */
 .plan-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:26px}
@@ -349,6 +351,7 @@ dialog[open]{animation:pop .18s ease}
           <div class="stat c-total"><div class="num" id="dTotal">0</div><div class="lbl">Total tasks</div></div>
           <div class="stat c-done"><div class="num" id="dDone">0</div><div class="lbl">Completed</div></div>
           <div class="stat c-prog"><div class="num" id="dProg">0</div><div class="lbl">In progress</div></div>
+          <div class="stat c-review"><div class="num" id="dReview">0</div><div class="lbl">Needs review</div></div>
           <div class="stat c-not"><div class="num" id="dNot">0</div><div class="lbl">Not started</div></div>
         </div>
         <div class="dash-grid">
@@ -375,6 +378,7 @@ dialog[open]{animation:pop .18s ease}
           <div class="stat c-total"><div class="num" id="pTotal">0</div><div class="lbl">Total</div></div>
           <div class="stat c-done"><div class="num" id="pDone">0</div><div class="lbl">Completed</div></div>
           <div class="stat c-prog"><div class="num" id="pProg">0</div><div class="lbl">In progress</div></div>
+          <div class="stat c-review"><div class="num" id="pReview">0</div><div class="lbl">Needs review</div></div>
           <div class="stat c-not"><div class="num" id="pNot">0</div><div class="lbl">Not started</div></div>
         </div>
         <div class="toolbar">
@@ -383,6 +387,7 @@ dialog[open]{animation:pop .18s ease}
             <option value="">All statuses</option>
             <option value="Not Started">Not Started</option>
             <option value="In Progress">In Progress</option>
+            <option value="Needs Review">Needs Review</option>
             <option value="Completed">Completed</option>
           </select>
         </div>
@@ -422,7 +427,7 @@ dialog[open]{animation:pop .18s ease}
     <div class="field"><label for="fStart">Start date</label><input id="fStart" type="date"></div>
     <div class="field"><label for="fEnd">Due date</label><input id="fEnd" type="date"></div>
   </div>
-  <div class="field"><label for="fStatus">Status</label><select id="fStatus"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></div>
+  <div class="field"><label for="fStatus">Status</label><select id="fStatus"><option>Not Started</option><option>In Progress</option><option>Needs Review</option><option>Completed</option></select></div>
   <div class="modal-actions"><button class="btn-ghost" id="taskCancel">Cancel</button><button class="btn-primary" id="taskSave">Save task</button></div>
 </dialog>
 
@@ -504,7 +509,8 @@ dialog[open]{animation:pop .18s ease}
   <div class="brief-footer">
     <div id="briefDoneBy"></div>
     <div class="brief-footer-actions">
-      <button class="btn-green" id="briefCompleteBtn">Mark completed</button>
+      <button class="btn-review" id="briefReviewBtn">Submit for review</button>
+      <button class="btn-green admin-only" id="briefCompleteBtn">Mark completed</button>
       <button class="btn-ghost admin-only" id="briefEditDetailsBtn">Edit details</button>
       <button class="btn-danger admin-only" id="briefDeleteBtn">Delete task</button>
     </div>
@@ -574,7 +580,7 @@ function isAdmin(){ return !!currentUser && currentUser.toLowerCase()===ADMIN_NA
 function initials(n){ return (n||"?").trim().split(/\s+/).map(function(w){return w[0];}).slice(0,2).join("").toUpperCase(); }
 function fmtDate(iso){ if(!iso) return "\u2014"; var p=iso.split("-"); if(p.length<3) return iso; var m=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]; return m[parseInt(p[1],10)-1]+" "+parseInt(p[2],10)+", "+p[0]; }
 function timeAgo(iso){ var d=(Date.now()-new Date(iso).getTime())/1000; if(d<60)return"just now"; if(d<3600)return Math.floor(d/60)+"m ago"; if(d<86400)return Math.floor(d/3600)+"h ago"; return Math.floor(d/86400)+"d ago"; }
-function scls(st){ if(st==="Completed")return"completed"; if(st==="In Progress")return"inprogress"; return"notstarted"; }
+function scls(st){ if(st==="Completed")return"completed"; if(st==="In Progress")return"inprogress"; if(st==="Needs Review")return"needsreview"; return"notstarted"; }
 function attTypeLabel(t){ return {video:"VIDEO",audio:"AUDIO",image:"IMAGE",doc:"DOC",link:"LINK"}[t]||"LINK"; }
 function findItem(id){ return items.find(function(x){ return x.id===id; }); }
 function itemsOf(taskId){ return items.filter(function(i){ return i.task_id===taskId; }); }
@@ -741,14 +747,19 @@ async function logActivity(user,action){
 function renderAll(){ renderDashboard(); renderPlans(); renderTeam(); }
 
 function taskCounts(arr){
-  var c={total:arr.length,done:0,prog:0,not:0};
-  arr.forEach(function(t){ if(t.status==="Completed")c.done++; else if(t.status==="In Progress")c.prog++; else c.not++; });
+  var c={total:arr.length,done:0,prog:0,review:0,not:0};
+  arr.forEach(function(t){
+    if(t.status==="Completed")c.done++;
+    else if(t.status==="In Progress")c.prog++;
+    else if(t.status==="Needs Review")c.review++;
+    else c.not++;
+  });
   return c;
 }
 
 function renderDashboard(){
   var c=taskCounts(items.length?items:tasks);
-  el("dTotal").textContent=c.total; el("dDone").textContent=c.done; el("dProg").textContent=c.prog; el("dNot").textContent=c.not;
+  el("dTotal").textContent=c.total; el("dDone").textContent=c.done; el("dProg").textContent=c.prog; el("dReview").textContent=c.review; el("dNot").textContent=c.not;
   var wrap=el("dashPlans"); wrap.innerHTML="";
   plans.forEach(function(p){
     var planTaskIds=tasks.filter(function(t){ return t.plan_id===p.id; }).map(function(t){ return t.id; });
@@ -796,7 +807,7 @@ function renderPlans(){
   var planItems=items.filter(function(i){ return pt.some(function(t){ return t.id===i.task_id; }); });
   var base=planItems.length?planItems:pt;
   var c=taskCounts(base); var pct=c.total?Math.round(c.done/c.total*100):0;
-  el("pTotal").textContent=c.total; el("pDone").textContent=c.done; el("pProg").textContent=c.prog; el("pNot").textContent=c.not;
+  el("pTotal").textContent=c.total; el("pDone").textContent=c.done; el("pProg").textContent=c.prog; el("pReview").textContent=c.review; el("pNot").textContent=c.not;
   el("progressFill").style.width=pct+"%"; el("progressPct").textContent=pct+"%"; el("progressCount").textContent=c.done+" / "+c.total+" completed";
 
   var q=el("searchInput").value.toLowerCase(); var sf=el("statusFilter").value;
@@ -1084,8 +1095,9 @@ function renderBrief(){
 
   el("briefDoneBy").textContent = (t.status==="Completed"&&t.completed_by)
     ? "Completed by "+t.completed_by+(t.completed_at?" \u00b7 "+fmtDate(t.completed_at.slice(0,10)):"")
-    : "";
+    : (t.status==="Needs Review" ? "Waiting for review" : "");
   el("briefCompleteBtn").style.display = t.status==="Completed" ? "none" : "";
+  el("briefReviewBtn").style.display = (t.status==="Completed"||t.status==="Needs Review") ? "none" : "";
 }
 
 /* Fields */
@@ -1188,7 +1200,15 @@ el("attSave").addEventListener("click",async function(){
 });
 
 /* Brief footer actions */
+el("briefReviewBtn").addEventListener("click",async function(){
+  var t=findItem(currentBriefItemId); if(!t) return;
+  var res=await sb.from("subtasks").update({status:"Needs Review",updated_at:new Date().toISOString()}).eq("id",t.id);
+  if(res.error){ toast("Error submitting for review","error"); return; }
+  await logActivity(currentUser,'submitted "'+t.title+'" for review');
+  toast("Submitted for review","success"); await loadAll(); renderAll();
+});
 el("briefCompleteBtn").addEventListener("click",async function(){
+  if(!isAdmin()) return;
   var t=findItem(currentBriefItemId); if(!t) return;
   await sb.from("subtasks").update({status:"Completed",completed_by:currentUser,completed_at:new Date().toISOString()}).eq("id",t.id);
   await logActivity(currentUser,'completed "'+t.title+'"');
