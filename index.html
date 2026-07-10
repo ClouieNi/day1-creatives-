@@ -10,9 +10,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
-  --bg:#171717;--sidebar:#1c1c1c;--panel:#1c1c1c;--panel-2:#232323;--line:#2e2e2e;
-  --text:#ededed;--muted:#8a8a8a;--accent:#3ecf8e;--accent-soft:rgba(62,207,142,.13);
-  --amber:#f0b429;--blue:#5b9df0;--green:#3ecf8e;--rose:#f16565;--radius:8px;
+  --bg:#0b0e17;--sidebar:#0e1220;--panel:#131826;--panel-2:#1a2032;--line:#242c42;
+  --text:#e8eaf2;--muted:#8b93a8;--accent:#7c6cf5;--accent-soft:rgba(124,108,245,.14);
+  --amber:#e8a33d;--blue:#5b9df0;--green:#4fc98c;--rose:#e06a6a;--radius:12px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:var(--text);font-family:'Poppins',sans-serif;font-size:14px;line-height:1.55;min-height:100vh}
@@ -20,10 +20,10 @@ body{background:var(--bg);color:var(--text);font-family:'Poppins',sans-serif;fon
 button{font-family:'Poppins',sans-serif;font-weight:500;font-size:13.5px;border:none;border-radius:6px;padding:9px 16px;cursor:pointer;transition:background .12s,border-color .12s,color .12s,transform .12s}
 button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 input:focus-visible,select:focus-visible,textarea:focus-visible{border-color:var(--accent)}
-.btn-primary{background:var(--accent);color:#0a0a0a;font-weight:600}.btn-primary:hover{background:#4ee0a0;transform:translateY(-1px)}.btn-primary:active{transform:translateY(0)}
+.btn-primary{background:var(--accent);color:#fff;font-weight:600}.btn-primary:hover{background:#8d7ff7;transform:translateY(-1px)}.btn-primary:active{transform:translateY(0)}
 .btn-ghost{background:var(--panel-2);color:var(--text);border:1px solid var(--line)}.btn-ghost:hover{border-color:#454545;background:#282828}
 .btn-danger{background:transparent;color:var(--rose);border:1px solid var(--line)}.btn-danger:hover{border-color:var(--rose);background:rgba(241,101,101,.08)}
-.btn-green{background:rgba(62,207,142,.13);color:var(--green);border:1px solid rgba(62,207,142,.4)}.btn-green:hover{background:rgba(62,207,142,.22)}
+.btn-green{background:rgba(79,201,140,.15);color:var(--green);border:1px solid rgba(79,201,140,.35)}.btn-green:hover{background:rgba(79,201,140,.25)}
 input,select,textarea{background:#141414;border:1px solid var(--line);border-radius:6px;padding:10px 12px;color:var(--text);font-family:'Poppins',sans-serif;font-size:14px;resize:vertical;transition:border-color .12s}
 input:hover,select:hover,textarea:hover{border-color:#454545}
 input[type=date]{color-scheme:dark}
@@ -41,7 +41,7 @@ select option{background:var(--panel-2);color:var(--text)}
 #loginScreen{position:fixed;inset:0;background:var(--bg);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
 .login-card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:40px 36px;width:min(410px,100%);text-align:center}
 .login-logo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px}
-.logo-mark{width:34px;height:34px;border-radius:8px;background:var(--accent);display:inline-flex;align-items:center;justify-content:center;font-weight:700;color:#0a0a0a;font-size:14px}
+.logo-mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--accent),#4a9df0);display:inline-flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:14px}
 .login-logo .name{font-weight:700;font-size:20px}
 .login-sub{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:28px}
 .login-card .field{text-align:left;margin-bottom:18px}
@@ -59,13 +59,13 @@ select option{background:var(--panel-2);color:var(--text)}
 .side-logo .name{font-weight:700;font-size:16px}
 .side-sub{font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);padding:2px 18px 18px 62px}
 .user-card{margin:0 12px 20px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px}
-.avatar{width:32px;height:32px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;border:1px solid rgba(62,207,142,.25)}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;border:1px solid rgba(124,108,245,.3)}
 .user-card .uname{font-weight:600;font-size:13.5px;line-height:1.2}
 .user-card .urole{font-size:11px;color:var(--muted)}
 .nav{flex:1;padding:0 12px}
 .nav button{display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:transparent;color:var(--muted);padding:10px 12px;border-radius:6px;margin-bottom:2px;font-weight:500;transition:background .12s,color .12s}
 .nav button:hover{color:var(--text);background:rgba(255,255,255,.04)}
-.nav button.active{background:var(--accent-soft);color:var(--accent);font-weight:600;border:1px solid rgba(62,207,142,.25)}
+.nav button.active{background:var(--accent-soft);color:var(--accent);font-weight:600;border:1px solid rgba(124,108,245,.3)}
 .nav .ico{width:20px;text-align:center;font-size:15px}
 .side-bottom{padding:14px 12px;border-top:1px solid var(--line)}
 .side-bottom button{width:100%;background:transparent;color:var(--rose);text-align:left;padding:10px 12px}
@@ -98,13 +98,13 @@ body.is-admin .admin-only{display:inline-flex !important}
 
 /* progress */
 .progress-track{height:7px;background:var(--panel-2);border-radius:4px;overflow:hidden}
-.progress-fill{height:100%;background:var(--accent);border-radius:4px;transition:width .5s cubic-bezier(.22,1,.36,1)}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),#4a9df0);border-radius:4px;transition:width .5s cubic-bezier(.22,1,.36,1)}
 
 /* pills */
 .pill{display:inline-block;font-size:11.5px;font-weight:600;padding:4px 12px;border-radius:999px;white-space:nowrap}
 .pill.notstarted{background:rgba(232,163,61,.13);color:var(--amber);border:1px solid rgba(232,163,61,.4)}
 .pill.inprogress{background:rgba(91,157,240,.13);color:var(--blue);border:1px solid rgba(91,157,240,.4)}
-.pill.completed{background:rgba(62,207,142,.13);color:var(--green);border:1px solid rgba(62,207,142,.4)}
+.pill.completed{background:rgba(79,201,140,.13);color:var(--green);border:1px solid rgba(79,201,140,.4)}
 
 /* plan bar */
 .plan-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:26px}
@@ -123,18 +123,13 @@ body.is-admin .admin-only{display:inline-flex !important}
 .task-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:12px;overflow:hidden;transition:border-color .12s}
 .task-card:hover{border-color:#3a3a3a}
 .task-card.completed-card{border-color:rgba(79,201,140,.25)}
-.task-top{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;transition:background .12s}
-.task-top:hover{background:rgba(255,255,255,.02)}
-.task-top .chev{color:var(--muted);font-size:11px;transition:transform .2s;flex-shrink:0}
-.task-card.open .chev{transform:rotate(90deg)}
+.task-row{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;transition:background .12s}
+.task-row:hover{background:rgba(255,255,255,.02)}
 .task-info{flex:1;min-width:0}
 .task-title{font-weight:600;font-size:15px}
 .task-meta{font-size:12px;color:var(--muted);margin-top:2px}
 .task-meta b{color:#aeb6c9;font-weight:600}
 .att-count{font-size:11.5px;color:var(--accent);font-weight:600;margin-left:8px}
-.task-body{display:none;border-top:1px solid var(--line);padding:18px 20px;background:rgba(255,255,255,.015)}
-.task-card.open .task-body{display:block}
-.task-notes{font-size:13px;color:var(--muted);margin-bottom:12px}
 .task-dates{font-size:12px;color:var(--muted);margin-bottom:14px}
 .att-list{margin-bottom:14px}
 .att-item{display:flex;align-items:center;gap:10px;background:var(--panel-2);border:1px solid var(--line);border-radius:9px;padding:9px 12px;margin-bottom:7px}
@@ -154,6 +149,52 @@ body.is-admin .admin-only{display:inline-flex !important}
 .done-by{font-size:12px;color:var(--green);margin-top:10px}
 .empty{padding:44px 20px;text-align:center;color:var(--muted);background:var(--panel);border:1px dashed var(--line);border-radius:var(--radius)}
 .empty p{margin-bottom:14px}
+
+/* ================= TASK BRIEF ================= */
+.brief-dialog{width:min(860px,94vw);padding:0;max-height:90vh}
+.brief-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding:26px 30px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:2}
+.brief-eyebrow{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:6px}
+.brief-top h2{font-size:21px;font-weight:700;line-height:1.3}
+.brief-meta{font-size:12.5px;color:var(--muted);margin-top:8px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.brief-body{padding:22px 30px 8px}
+.brief-section{margin-bottom:26px}
+.brief-section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.brief-section-head h4{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.brief-section-head button{padding:6px 12px;font-size:12px}
+.brief-fields{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.brief-field{background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:10px 12px;position:relative}
+.brief-field .bf-label{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:4px}
+.brief-field .bf-value{font-size:13.5px;word-break:break-word}
+.brief-field .bf-rm{position:absolute;top:6px;right:6px;background:none;border:none;color:var(--muted);font-size:13px;padding:2px 6px}
+.brief-field .bf-rm:hover{color:var(--rose)}
+.brief-add-field-form{display:none;gap:8px;margin-top:10px;flex-wrap:wrap}
+.brief-add-field-form.show{display:flex}
+.brief-add-field-form input{flex:1;min-width:140px}
+.brief-text{font-size:13.5px;color:#c3c9d8;white-space:pre-wrap;line-height:1.65}
+.brief-text.empty-hint{color:var(--muted);font-style:italic}
+.brief-script-table{border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.brief-script-row{display:grid;grid-template-columns:1fr 1fr auto;border-bottom:1px solid var(--line)}
+.brief-script-row:last-child{border-bottom:none}
+.brief-script-row.head{background:var(--panel-2)}
+.brief-script-row.head div{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:9px 14px}
+.brief-script-row textarea{border:none;border-radius:0;background:transparent;padding:12px 14px;font-size:13px;min-height:60px}
+.brief-script-row textarea:focus-visible{outline:none;background:rgba(124,108,245,.06)}
+.brief-script-row .bs-rm{display:flex;align-items:center;justify-content:center;padding:0 10px;background:none;border:none;color:var(--muted)}
+.brief-script-row .bs-rm:hover{color:var(--rose)}
+.brief-assets .att-item{margin-bottom:9px}
+.brief-image-item{margin-bottom:12px}
+.brief-image-item img{max-width:100%;max-height:220px;border-radius:9px;border:1px solid var(--line);display:block;cursor:pointer}
+.brief-image-item .bi-caption{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--muted);margin-top:6px}
+.brief-image-item .bi-caption .rm{background:none;border:none;color:var(--muted);font-size:13px}
+.brief-image-item .bi-caption .rm:hover{color:var(--rose)}
+.brief-footer{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;padding:18px 30px 26px;border-top:1px solid var(--line);position:sticky;bottom:0;background:var(--panel)}
+.brief-footer-actions{display:flex;gap:8px;flex-wrap:wrap}
+.brief-footer #briefDoneBy{font-size:12px;color:var(--green)}
+@media (max-width:640px){
+  .brief-top,.brief-body,.brief-footer{padding-left:18px;padding-right:18px}
+  .brief-script-row{grid-template-columns:1fr}
+  .brief-script-row .bs-rm{justify-content:flex-start;padding:8px 14px}
+}
 
 /* dashboard */
 h2.section{font-weight:600;font-size:18px;margin:0 0 16px}
@@ -351,8 +392,92 @@ dialog[open]{animation:pop .18s ease}
     <div class="field"><label for="fEnd">Due date</label><input id="fEnd" type="date"></div>
   </div>
   <div class="field"><label for="fStatus">Status</label><select id="fStatus"><option>Not Started</option><option>In Progress</option><option>Completed</option></select></div>
-  <div class="field"><label for="fNotes">Notes (optional)</label><textarea id="fNotes" rows="2"></textarea></div>
   <div class="modal-actions"><button class="btn-ghost" id="taskCancel">Cancel</button><button class="btn-primary" id="taskSave">Save task</button></div>
+</dialog>
+
+<!-- Task Brief overlay -->
+<dialog id="briefModal" class="brief-dialog">
+  <div class="brief-top">
+    <div>
+      <div class="brief-eyebrow">TASK BRIEF</div>
+      <h2 id="briefTitleText"></h2>
+      <div class="brief-meta" id="briefMetaLine"></div>
+    </div>
+    <button class="btn-ghost" id="briefClose">Close</button>
+  </div>
+
+  <div class="brief-body">
+
+    <div class="brief-section">
+      <div class="brief-section-head">
+        <h4>Fields</h4>
+        <button class="btn-ghost admin-only" id="briefAddFieldBtn">+ Add field</button>
+      </div>
+      <div id="briefFields" class="brief-fields"></div>
+      <div class="brief-add-field-form" id="briefFieldForm">
+        <input type="text" id="bfLabel" placeholder="Field name, e.g. Angle">
+        <input type="text" id="bfValue" placeholder="Value">
+        <button class="btn-ghost" id="bfCancel">Cancel</button>
+        <button class="btn-primary" id="bfSave">Add</button>
+      </div>
+    </div>
+
+    <div class="brief-section">
+      <div class="brief-section-head">
+        <h4>Concept Overview</h4>
+        <button class="btn-ghost admin-only" id="briefEditOverviewBtn">Edit</button>
+      </div>
+      <div id="briefOverviewView" class="brief-text"></div>
+      <div id="briefOverviewEdit" style="display:none">
+        <textarea id="briefOverviewInput" rows="4" placeholder="Describe the concept, goal, or context for this task..."></textarea>
+        <div class="modal-actions" style="margin-top:10px">
+          <button class="btn-ghost" id="briefOverviewCancel">Cancel</button>
+          <button class="btn-primary" id="briefOverviewSave">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="brief-section">
+      <div class="brief-section-head">
+        <h4>Notes</h4>
+        <button class="btn-ghost admin-only" id="briefEditNotesBtn">Edit</button>
+      </div>
+      <div id="briefNotesView" class="brief-text"></div>
+      <div id="briefNotesEdit" style="display:none">
+        <textarea id="briefNotesInput" rows="3" placeholder="Any extra notes for whoever picks this up..."></textarea>
+        <div class="modal-actions" style="margin-top:10px">
+          <button class="btn-ghost" id="briefNotesCancel">Cancel</button>
+          <button class="btn-primary" id="briefNotesSave">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="brief-section">
+      <div class="brief-section-head">
+        <h4>Script + Visuals</h4>
+        <button class="btn-ghost admin-only" id="briefAddRowBtn">+ Add row</button>
+      </div>
+      <div id="briefScriptTable"></div>
+    </div>
+
+    <div class="brief-section">
+      <div class="brief-section-head">
+        <h4>Assets &amp; Images</h4>
+        <button class="btn-ghost" id="briefAddAssetBtn">+ Add link</button>
+      </div>
+      <div id="briefAssets"></div>
+    </div>
+
+  </div>
+
+  <div class="brief-footer">
+    <div id="briefDoneBy"></div>
+    <div class="brief-footer-actions">
+      <button class="btn-green" id="briefCompleteBtn">Mark completed</button>
+      <button class="btn-ghost admin-only" id="briefEditDetailsBtn">Edit details</button>
+      <button class="btn-danger admin-only" id="briefDeleteBtn">Delete task</button>
+    </div>
+  </div>
 </dialog>
 
 <dialog id="attModal">
@@ -642,50 +767,27 @@ function renderPlans(){
   });
 
   var list=el("taskList");
-  var openIds={};
-  list.querySelectorAll(".task-card.open").forEach(function(c){ openIds[c.dataset.id]=true; });
   list.innerHTML="";
 
   filtered.forEach(function(t){
     var atts=Array.isArray(t.attachments)?t.attachments:[];
-    var attHtml="";
-    atts.forEach(function(a){
-      attHtml+='<div class="att-item">'+
-        '<span class="att-type '+esc(a.type)+'">'+attTypeLabel(a.type)+'</span>'+
-        '<a href="'+esc(a.url)+'" target="_blank" rel="noopener">'+esc(a.label||a.url)+'</a>'+
-        '<span class="att-by">by '+esc(a.addedBy||"")+'</span>'+
-        '<button class="rm" data-delatt="'+t.id+':'+a.id+'">\u00d7</button>'+
-      '</div>';
-    });
     var card=document.createElement("div");
-    card.className="task-card"+(t.status==="Completed"?" completed-card":"")+(openIds[t.id]?" open":"");
+    card.className="task-card"+(t.status==="Completed"?" completed-card":"");
     card.dataset.id=t.id;
     card.innerHTML=
-      '<div class="task-top" data-toggle="'+t.id+'">'+
-        '<span class="chev">&#9658;</span>'+
+      '<div class="task-row" data-openbrief="'+t.id+'">'+
         '<div class="task-info">'+
           '<div class="task-title">'+esc(t.title)+'</div>'+
           '<div class="task-meta">Owner: <b>'+esc(t.owner||"\u2014")+'</b>'+(t.end_date?' \u00b7 due '+fmtDate(t.end_date):'')+
-            (atts.length?'<span class="att-count">'+atts.length+' file link'+(atts.length>1?'s':'')+'</span>':'')+
+            (atts.length?'<span class="att-count">'+atts.length+' asset'+(atts.length>1?'s':'')+'</span>':'')+
           '</div>'+
         '</div>'+
         '<span class="pill '+scls(t.status)+'">'+esc(t.status)+'</span>'+
-      '</div>'+
-      '<div class="task-body">'+
-        (t.notes?'<div class="task-notes">'+esc(t.notes)+'</div>':'')+
-        '<div class="task-dates">Start: '+fmtDate(t.start_date)+' \u00b7 Due: '+fmtDate(t.end_date)+'</div>'+
-        (atts.length?'<div class="att-list">'+attHtml+'</div>':'')+
-        '<div class="task-actions">'+
-          '<button class="btn-ghost" data-addatt="'+t.id+'">+ File link</button>'+
-          (t.status!=="Completed"?'<button class="btn-green" data-complete="'+t.id+'">Mark completed</button>':'')+
-          (isAdmin()?'<button class="btn-ghost" data-edit="'+t.id+'">Edit</button>':'')+
-          (isAdmin()?'<button class="btn-danger" data-del="'+t.id+'">Delete</button>':'')+
-        '</div>'+
-        (t.status==="Completed"&&t.completed_by?'<div class="done-by">Completed by '+esc(t.completed_by)+(t.completed_at?' \u00b7 '+fmtDate(t.completed_at.slice(0,10)):'')+' </div>':'')+
       '</div>';
     list.appendChild(card);
   });
   el("emptyState").hidden=filtered.length>0;
+  if(currentBriefTaskId) renderBrief();
 }
 
 function renderTeam(){
@@ -703,7 +805,6 @@ function renderTeam(){
           (!mIsAdmin?'<button class="rm" data-delmember="'+m.id+'">\u00d7</button>':'')+
         '</div>':'')+
       '<div class="name">'+esc(m.name)+
-        (mIsAdmin?' <span class="role-badge">ADMIN</span>':'')+
         (isMe?' <span class="you-tag">You</span>':'')+
       '</div>'+
       '<div class="role">'+esc(mIsAdmin?"Admin":(m.role||"Member"))+'</div>'+
@@ -773,10 +874,10 @@ window.openTaskModal=function(id){
     var t=tasks.find(function(x){ return x.id===editingTaskId; }); if(!t) return;
     fillOwnerSelect(el("fOwner"),t.owner||"");
     el("fTask").value=t.title; el("fStart").value=t.start_date||""; el("fEnd").value=t.end_date||"";
-    el("fStatus").value=t.status; el("fNotes").value=t.notes||"";
+    el("fStatus").value=t.status;
   } else {
     fillOwnerSelect(el("fOwner"),currentUser);
-    el("fTask").value=""; el("fStart").value=""; el("fEnd").value=""; el("fStatus").value="Not Started"; el("fNotes").value="";
+    el("fTask").value=""; el("fStart").value=""; el("fEnd").value=""; el("fStatus").value="Not Started";
   }
   el("taskModal").showModal(); el("fTask").focus();
 };
@@ -788,7 +889,7 @@ el("taskSave").addEventListener("click",async function(){
   var status=el("fStatus").value;
   var payload={
     title:name, owner:el("fOwner").value, start_date:el("fStart").value||null,
-    end_date:el("fEnd").value||null, status:status, notes:el("fNotes").value.trim(),
+    end_date:el("fEnd").value||null, status:status,
     updated_at:new Date().toISOString()
   };
   if(status==="Completed"){ payload.completed_by=currentUser; payload.completed_at=new Date().toISOString(); }
@@ -799,12 +900,14 @@ el("taskSave").addEventListener("click",async function(){
     if(error){ toast("Error saving task","error"); return; }
     await logActivity(currentUser,'updated task "'+name+'"');
   } else {
-    payload.plan_id=activePlanId; payload.created_by=currentUser; payload.attachments=[];
+    payload.plan_id=activePlanId; payload.created_by=currentUser;
+    payload.attachments=[]; payload.notes=''; payload.overview=''; payload.custom_fields=[]; payload.script_rows=[];
     var {error}=await sb.from("tasks").insert(payload);
     if(error){ toast("Error creating task","error"); return; }
     await logActivity(currentUser,'added task "'+name+'"');
   }
   el("taskModal").close(); toast("Task saved","success"); await loadAll(); renderAll();
+  if(currentBriefTaskId===editingTaskId) renderBrief();
 });
 
 /* ── Attachment ── */
@@ -820,6 +923,219 @@ el("attSave").addEventListener("click",async function(){
   if(error){ toast("Error adding link","error"); return; }
   await logActivity(currentUser,'added a '+el("aType").value+' link to "'+t.title+'"');
   el("attModal").close(); toast("Link added","success"); await loadAll(); renderAll();
+});
+
+/* ================= TASK BRIEF ================= */
+var currentBriefTaskId=null;
+
+function findTask(id){ return tasks.find(function(x){ return x.id===id; }); }
+
+window.openBrief=function(id){
+  currentBriefTaskId=id;
+  el("briefFieldForm").classList.remove("show");
+  el("briefOverviewEdit").style.display="none"; el("briefOverviewView").style.display="";
+  el("briefNotesEdit").style.display="none"; el("briefNotesView").style.display="";
+  renderBrief();
+  el("briefModal").showModal();
+};
+function closeBrief(){ el("briefModal").close(); currentBriefTaskId=null; }
+el("briefClose").addEventListener("click",closeBrief);
+
+function renderBrief(){
+  var t=findTask(currentBriefTaskId);
+  if(!t){ closeBrief(); return; }
+
+  el("briefTitleText").textContent=t.title;
+  var metaBits=[];
+  metaBits.push('<span class="pill '+scls(t.status)+'">'+esc(t.status)+'</span>');
+  metaBits.push('Owner: <b style="color:var(--text)">'+esc(t.owner||"\u2014")+'</b>');
+  if(t.start_date) metaBits.push("Start "+fmtDate(t.start_date));
+  if(t.end_date) metaBits.push("Due "+fmtDate(t.end_date));
+  metaBits.push("Created "+fmtDate((t.created_at||"").slice(0,10)));
+  el("briefMetaLine").innerHTML=metaBits.join(' <span style="opacity:.4">\u00b7</span> ');
+
+  // ---- Fields ----
+  var fields=Array.isArray(t.custom_fields)?t.custom_fields:[];
+  var ff=el("briefFields");
+  if(!fields.length){
+    ff.innerHTML='<div class="brief-text empty-hint">No fields added yet.</div>';
+  } else {
+    ff.innerHTML="";
+    fields.forEach(function(f){
+      var d=document.createElement("div"); d.className="brief-field";
+      d.innerHTML='<div class="bf-label">'+esc(f.label)+'</div><div class="bf-value">'+esc(f.value||"\u2014")+'</div>'+
+        (isAdmin()?'<button class="bf-rm" data-rmfield="'+f.id+'">\u00d7</button>':'');
+      ff.appendChild(d);
+    });
+  }
+
+  // ---- Overview ----
+  el("briefOverviewView").innerHTML = t.overview
+    ? esc(t.overview)
+    : '<span class="empty-hint">No overview yet.</span>';
+  el("briefOverviewInput").value = t.overview || "";
+
+  // ---- Notes ----
+  el("briefNotesView").innerHTML = t.notes
+    ? esc(t.notes)
+    : '<span class="empty-hint">No notes yet.</span>';
+  el("briefNotesInput").value = t.notes || "";
+
+  // ---- Script + Visuals ----
+  var rows=Array.isArray(t.script_rows)?t.script_rows:[];
+  var st=el("briefScriptTable");
+  if(!rows.length){
+    st.innerHTML='<div class="brief-text empty-hint">No script rows yet.</div>';
+  } else {
+    var html='<div class="brief-script-row head"><div>Script</div><div>Visuals</div><div></div></div>';
+    rows.forEach(function(r){
+      html+='<div class="brief-script-row" data-rowid="'+r.id+'">'+
+        '<textarea data-scriptcell="script" '+(isAdmin()?'':'readonly')+' placeholder="What is said...">'+esc(r.script||"")+'</textarea>'+
+        '<textarea data-scriptcell="visuals" '+(isAdmin()?'':'readonly')+' placeholder="What is shown...">'+esc(r.visuals||"")+'</textarea>'+
+        (isAdmin()?'<button class="bs-rm" data-rmrow="'+r.id+'">\u00d7</button>':'<div></div>')+
+      '</div>';
+    });
+    st.innerHTML=html;
+  }
+
+  // ---- Assets (links + inline images) ----
+  var atts=Array.isArray(t.attachments)?t.attachments:[];
+  var ba=el("briefAssets");
+  if(!atts.length){
+    ba.innerHTML='<div class="brief-text empty-hint">No links added yet.</div>';
+  } else {
+    var html2="";
+    atts.forEach(function(a){
+      if(a.type==="image"){
+        html2+='<div class="brief-image-item">'+
+          '<img src="'+esc(a.url)+'" alt="'+esc(a.label||"image")+'" data-openimg="'+esc(a.url)+'" loading="lazy">'+
+          '<div class="bi-caption"><span>'+esc(a.label||"Image")+' \u00b7 by '+esc(a.addedBy||"")+'</span>'+
+          '<button class="rm" data-delatt="'+t.id+':'+a.id+'">Remove</button></div>'+
+        '</div>';
+      } else {
+        html2+='<div class="att-item">'+
+          '<span class="att-type '+esc(a.type)+'">'+attTypeLabel(a.type)+'</span>'+
+          '<a href="'+esc(a.url)+'" target="_blank" rel="noopener">'+esc(a.label||a.url)+'</a>'+
+          '<span class="att-by">by '+esc(a.addedBy||"")+'</span>'+
+          '<button class="rm" data-delatt="'+t.id+':'+a.id+'">\u00d7</button>'+
+        '</div>';
+      }
+    });
+    ba.innerHTML=html2;
+  }
+
+  // ---- Footer ----
+  el("briefDoneBy").textContent = (t.status==="Completed"&&t.completed_by)
+    ? "Completed by "+t.completed_by+(t.completed_at?" \u00b7 "+fmtDate(t.completed_at.slice(0,10)):"")
+    : "";
+  el("briefCompleteBtn").style.display = t.status==="Completed" ? "none" : "";
+}
+
+/* Add / remove custom fields */
+el("briefAddFieldBtn").addEventListener("click",function(){
+  el("bfLabel").value=""; el("bfValue").value="";
+  el("briefFieldForm").classList.add("show"); el("bfLabel").focus();
+});
+el("bfCancel").addEventListener("click",function(){ el("briefFieldForm").classList.remove("show"); });
+el("bfSave").addEventListener("click",async function(){
+  var label=el("bfLabel").value.trim(); if(!label){ el("bfLabel").focus(); return; }
+  var t=findTask(currentBriefTaskId); if(!t) return;
+  var fields=Array.isArray(t.custom_fields)?[...t.custom_fields]:[];
+  fields.push({id:Date.now(),label:label,value:el("bfValue").value.trim()});
+  var {error}=await sb.from("tasks").update({custom_fields:fields}).eq("id",t.id);
+  if(error){ toast("Error saving field","error"); return; }
+  el("briefFieldForm").classList.remove("show");
+  toast("Field added","success"); await loadAll(); renderAll();
+});
+
+/* Overview edit */
+el("briefEditOverviewBtn").addEventListener("click",function(){
+  if(!isAdmin()) return;
+  el("briefOverviewView").style.display="none"; el("briefOverviewEdit").style.display="";
+  el("briefOverviewInput").focus();
+});
+el("briefOverviewCancel").addEventListener("click",function(){
+  el("briefOverviewEdit").style.display="none"; el("briefOverviewView").style.display="";
+});
+el("briefOverviewSave").addEventListener("click",async function(){
+  var t=findTask(currentBriefTaskId); if(!t) return;
+  var val=el("briefOverviewInput").value.trim();
+  var {error}=await sb.from("tasks").update({overview:val}).eq("id",t.id);
+  if(error){ toast("Error saving overview","error"); return; }
+  await logActivity(currentUser,'updated the overview on "'+t.title+'"');
+  el("briefOverviewEdit").style.display="none"; el("briefOverviewView").style.display="";
+  toast("Overview saved","success"); await loadAll(); renderAll();
+});
+
+/* Notes edit */
+el("briefEditNotesBtn").addEventListener("click",function(){
+  if(!isAdmin()) return;
+  el("briefNotesView").style.display="none"; el("briefNotesEdit").style.display="";
+  el("briefNotesInput").focus();
+});
+el("briefNotesCancel").addEventListener("click",function(){
+  el("briefNotesEdit").style.display="none"; el("briefNotesView").style.display="";
+});
+el("briefNotesSave").addEventListener("click",async function(){
+  var t=findTask(currentBriefTaskId); if(!t) return;
+  var val=el("briefNotesInput").value.trim();
+  var {error}=await sb.from("tasks").update({notes:val}).eq("id",t.id);
+  if(error){ toast("Error saving notes","error"); return; }
+  await logActivity(currentUser,'updated notes on "'+t.title+'"');
+  el("briefNotesEdit").style.display="none"; el("briefNotesView").style.display="";
+  toast("Notes saved","success"); await loadAll(); renderAll();
+});
+
+/* Script rows */
+el("briefAddRowBtn").addEventListener("click",async function(){
+  if(!isAdmin()) return;
+  var t=findTask(currentBriefTaskId); if(!t) return;
+  var rows=Array.isArray(t.script_rows)?[...t.script_rows]:[];
+  rows.push({id:Date.now(),script:"",visuals:""});
+  var {error}=await sb.from("tasks").update({script_rows:rows}).eq("id",t.id);
+  if(error){ toast("Error adding row","error"); return; }
+  await loadAll(); renderAll();
+});
+document.addEventListener("blur",async function(e){
+  var cell=e.target.closest&&e.target.closest("[data-scriptcell]");
+  if(!cell||!isAdmin()) return;
+  var rowEl=cell.closest("[data-rowid]"); if(!rowEl) return;
+  var t=findTask(currentBriefTaskId); if(!t) return;
+  var rows=Array.isArray(t.script_rows)?[...t.script_rows]:[];
+  var idx=rows.findIndex(function(r){ return String(r.id)===rowEl.dataset.rowid; });
+  if(idx===-1) return;
+  var field=cell.dataset.scriptcell;
+  if(rows[idx][field]===cell.value) return; // no change
+  rows[idx][field]=cell.value;
+  var {error}=await sb.from("tasks").update({script_rows:rows}).eq("id",t.id);
+  if(!error){ tasks=tasks.map(function(x){ return x.id===t.id?{...x,script_rows:rows}:x; }); }
+},true);
+
+/* Add asset button inside brief opens the existing attModal */
+el("briefAddAssetBtn").addEventListener("click",function(){
+  attTaskId=currentBriefTaskId; el("aType").value="video"; el("aLabel").value=""; el("aUrl").value="";
+  el("attModal").showModal(); el("aLabel").focus();
+});
+
+/* Complete / edit details / delete, from within the brief */
+el("briefCompleteBtn").addEventListener("click",async function(){
+  var t=findTask(currentBriefTaskId); if(!t) return;
+  await sb.from("tasks").update({status:"Completed",completed_by:currentUser,completed_at:new Date().toISOString()}).eq("id",t.id);
+  await logActivity(currentUser,'completed "'+t.title+'"');
+  toast("Marked as completed","success"); await loadAll(); renderAll();
+});
+el("briefEditDetailsBtn").addEventListener("click",function(){
+  if(!currentBriefTaskId) return;
+  openTaskModal(currentBriefTaskId);
+});
+el("briefDeleteBtn").addEventListener("click",function(){
+  var t=findTask(currentBriefTaskId); if(!t) return;
+  showConfirm('Delete this task?','"'+t.title+'" will be removed.',async function(){
+    await sb.from("tasks").delete().eq("id",t.id);
+    await logActivity(currentUser,'deleted task "'+t.title+'"');
+    closeBrief();
+    toast("Task deleted","success"); await loadAll(); renderAll();
+  });
 });
 
 /* ── Team CRUD ── */
@@ -854,33 +1170,34 @@ el("memberSave").addEventListener("click",async function(){
 
 /* ── Delegated clicks ── */
 document.addEventListener("click",async function(e){
-  var toggle=e.target.closest&&e.target.closest("[data-toggle]");
-  if(toggle&&!e.target.closest("button")){ toggle.parentElement.classList.toggle("open"); return; }
+  var briefTrigger=e.target.closest&&e.target.closest("[data-openbrief]");
+  if(briefTrigger){ openBrief(briefTrigger.dataset.openbrief); return; }
+
+  var imgTrigger=e.target.closest&&e.target.closest("[data-openimg]");
+  if(imgTrigger){ window.open(imgTrigger.dataset.openimg,"_blank","noopener"); return; }
+
   var btn=e.target.closest&&e.target.closest("button"); if(!btn) return;
 
-  if(btn.dataset.edit){ openTaskModal(btn.dataset.edit); }
-
-  if(btn.dataset.del&&isAdmin()){
-    var t=tasks.find(function(x){ return x.id===btn.dataset.del; });
-    if(t) showConfirm('Delete this task?','"'+t.title+'" will be removed.',async function(){
-      await sb.from("tasks").delete().eq("id",t.id);
-      await logActivity(currentUser,'deleted task "'+t.title+'"');
-      toast("Task deleted","success"); await loadAll(); renderAll();
-    });
-  }
-
-  if(btn.dataset.complete){
-    var t=tasks.find(function(x){ return x.id===btn.dataset.complete; });
+  if(btn.dataset.rmfield&&isAdmin()){
+    var t=findTask(currentBriefTaskId);
     if(t){
-      await sb.from("tasks").update({status:"Completed",completed_by:currentUser,completed_at:new Date().toISOString()}).eq("id",t.id);
-      await logActivity(currentUser,'completed "'+t.title+'"');
-      toast("Marked as completed","success"); await loadAll(); renderAll();
+      showConfirm("Remove this field?","",async function(){
+        var fields=(t.custom_fields||[]).filter(function(f){ return String(f.id)!==btn.dataset.rmfield; });
+        await sb.from("tasks").update({custom_fields:fields}).eq("id",t.id);
+        toast("Field removed","success"); await loadAll(); renderAll();
+      });
     }
   }
 
-  if(btn.dataset.addatt){
-    attTaskId=btn.dataset.addatt; el("aType").value="video"; el("aLabel").value=""; el("aUrl").value="";
-    el("attModal").showModal(); el("aLabel").focus();
+  if(btn.dataset.rmrow&&isAdmin()){
+    var t=findTask(currentBriefTaskId);
+    if(t){
+      showConfirm("Remove this row?","",async function(){
+        var rows=(t.script_rows||[]).filter(function(r){ return String(r.id)!==btn.dataset.rmrow; });
+        await sb.from("tasks").update({script_rows:rows}).eq("id",t.id);
+        toast("Row removed","success"); await loadAll(); renderAll();
+      });
+    }
   }
 
   if(btn.dataset.delatt){
