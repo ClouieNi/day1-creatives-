@@ -103,6 +103,7 @@ select option{background:var(--panel-2);color:var(--text)}
 body.is-admin button.admin-only{display:inline-flex !important}
 body.is-admin div.admin-only{display:block !important}
 body.is-admin .admin-only{display:inline-flex}
+.force-hide{display:none !important}
 
 /* stats */
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:30px}
@@ -1022,8 +1023,9 @@ window.openBrief=function(id){
   el("briefFieldForm").classList.remove("show");
   el("briefOverviewEdit").style.display="none"; el("briefOverviewView").style.display="";
   el("briefNotesEdit").style.display="none"; el("briefNotesView").style.display="";
-  renderBrief();
   el("briefModal").showModal();
+  renderBrief();
+  el("briefModal").scrollTop=0;
 };
 function closeBrief(){ el("briefModal").close(); currentBriefItemId=null; }
 el("briefClose").addEventListener("click",closeBrief);
@@ -1105,9 +1107,9 @@ function renderBrief(){
   el("briefDoneBy").textContent = (t.status==="Completed"&&t.completed_by)
     ? "Completed by "+t.completed_by+(t.completed_at?" \u00b7 "+fmtDate(t.completed_at.slice(0,10)):"")
     : (t.status==="Needs Review" ? "Waiting for review" : "");
-  el("briefCompleteBtn").style.display = t.status==="Completed" ? "none" : "";
-  el("briefReviewBtn").style.display = (t.status==="Completed"||t.status==="Needs Review") ? "none" : "";
-  el("briefSendBackBtn").style.display = t.status==="Needs Review" ? "" : "none";
+  el("briefCompleteBtn").classList.toggle("force-hide", t.status==="Completed");
+  el("briefReviewBtn").classList.toggle("force-hide", t.status==="Completed"||t.status==="Needs Review");
+  el("briefSendBackBtn").classList.toggle("force-hide", t.status!=="Needs Review");
 }
 
 /* Fields */
