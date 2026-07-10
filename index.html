@@ -13,6 +13,14 @@
   --bg:#0b0e17;--sidebar:#0e1220;--panel:#131826;--panel-2:#1a2032;--line:#242c42;
   --text:#e8eaf2;--muted:#8b93a8;--accent:#7c6cf5;--accent-soft:rgba(124,108,245,.14);
   --amber:#e8a33d;--blue:#5b9df0;--green:#4fc98c;--rose:#e06a6a;--radius:12px;
+  --input:#161b29;--shadow:none;--hover:rgba(255,255,255,.03);--backdrop:rgba(4,6,12,.75);
+}
+body.light{
+  --bg:#f3f4f8;--sidebar:#fbfbfd;--panel:#ffffff;--panel-2:#f2f3f8;--line:#e5e7ef;
+  --text:#252a3a;--muted:#6d7488;--accent:#6a59e6;--accent-soft:rgba(106,89,230,.1);
+  --amber:#b07a12;--blue:#2f6fd0;--green:#1e9c62;--rose:#d05252;
+  --input:#f7f8fb;--shadow:0 1px 2px rgba(24,28,45,.05),0 4px 16px rgba(24,28,45,.06);
+  --hover:rgba(30,35,60,.04);--backdrop:rgba(30,34,52,.35);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:var(--text);font-family:'Poppins',sans-serif;font-size:14px;line-height:1.55;min-height:100vh}
@@ -21,11 +29,11 @@ button{font-family:'Poppins',sans-serif;font-weight:500;font-size:13.5px;border:
 button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 input:focus-visible,select:focus-visible,textarea:focus-visible{border-color:var(--accent)}
 .btn-primary{background:var(--accent);color:#fff;font-weight:600}.btn-primary:hover{background:#8d7ff7;transform:translateY(-1px)}.btn-primary:active{transform:translateY(0)}
-.btn-ghost{background:var(--panel-2);color:var(--text);border:1px solid var(--line)}.btn-ghost:hover{border-color:#454545;background:#282828}
+.btn-ghost{background:var(--panel-2);color:var(--text);border:1px solid var(--line)}.btn-ghost:hover{border-color:var(--muted);background:var(--hover)}
 .btn-danger{background:transparent;color:var(--rose);border:1px solid var(--line)}.btn-danger:hover{border-color:var(--rose);background:rgba(241,101,101,.08)}
 .btn-green{background:rgba(79,201,140,.15);color:var(--green);border:1px solid rgba(79,201,140,.35)}.btn-green:hover{background:rgba(79,201,140,.25)}
-input,select,textarea{background:#141414;border:1px solid var(--line);border-radius:6px;padding:10px 12px;color:var(--text);font-family:'Poppins',sans-serif;font-size:14px;resize:vertical;transition:border-color .12s}
-input:hover,select:hover,textarea:hover{border-color:#454545}
+input,select,textarea{background:var(--input);border:1px solid var(--line);border-radius:8px;padding:10px 12px;color:var(--text);font-family:'Poppins',sans-serif;font-size:14px;resize:vertical;transition:border-color .12s,background .12s}
+input:hover,select:hover,textarea:hover{border-color:var(--muted)}
 input[type=date]{color-scheme:dark}
 select{cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%238b93a8' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px}
 select option{background:var(--panel-2);color:var(--text)}
@@ -64,7 +72,7 @@ select option{background:var(--panel-2);color:var(--text)}
 .user-card .urole{font-size:11px;color:var(--muted)}
 .nav{flex:1;padding:0 12px}
 .nav button{display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:transparent;color:var(--muted);padding:10px 12px;border-radius:6px;margin-bottom:2px;font-weight:500;transition:background .12s,color .12s}
-.nav button:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.nav button:hover{color:var(--text);background:var(--hover)}
 .nav button.active{background:var(--accent-soft);color:var(--accent);font-weight:600;border:1px solid rgba(124,108,245,.3)}
 .nav .ico{width:20px;text-align:center;font-size:15px}
 .side-bottom{padding:14px 12px;border-top:1px solid var(--line)}
@@ -79,19 +87,21 @@ select option{background:var(--panel-2);color:var(--text)}
 .menu-toggle{display:none;position:fixed;top:14px;right:14px;z-index:30;background:var(--panel);border:1px solid var(--line);color:var(--text);padding:8px 12px;border-radius:9px}
 
 /* toast */
-.toast{position:fixed;bottom:28px;right:28px;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:12px 18px;font-size:13.5px;z-index:300;opacity:0;transform:translateY(8px);transition:all .25s;pointer-events:none}
+.toast{position:fixed;bottom:28px;right:28px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 18px;font-size:13.5px;z-index:300;opacity:0;transform:translateY(8px);transition:all .25s;pointer-events:none;box-shadow:var(--shadow)}
 .toast.show{opacity:1;transform:translateY(0)}
 .toast.error{border-color:var(--rose);color:var(--rose)}
 .toast.success{border-color:var(--green);color:var(--green)}
 
 /* admin */
 .admin-only{display:none !important}
-body.is-admin .admin-only{display:inline-flex !important}
+body.is-admin button.admin-only{display:inline-flex !important}
+body.is-admin div.admin-only{display:block !important}
+body.is-admin .admin-only{display:inline-flex}
 
 /* stats */
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:30px}
-.stat{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;text-align:center;transition:border-color .12s}
-.stat:hover{border-color:#3a3a3a}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;text-align:center;transition:border-color .12s;box-shadow:var(--shadow)}
+.stat:hover{border-color:var(--muted)}
 .stat .num{font-size:30px;font-weight:700;line-height:1.15}
 .stat .lbl{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:6px;font-weight:600}
 .stat.c-total .num{color:var(--text)}.stat.c-done .num{color:var(--green)}.stat.c-prog .num{color:var(--blue)}.stat.c-not .num{color:var(--amber)}
@@ -120,11 +130,11 @@ body.is-admin .admin-only{display:inline-flex !important}
 .toolbar input[type=search]{flex:1;min-width:170px}
 
 /* task cards */
-.task-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:12px;overflow:hidden;transition:border-color .12s}
-.task-card:hover{border-color:#3a3a3a}
+.task-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:12px;overflow:hidden;transition:border-color .12s;box-shadow:var(--shadow)}
+.task-card:hover{border-color:var(--muted)}
 .task-card.completed-card{border-color:rgba(79,201,140,.25)}
 .task-row{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;transition:background .12s}
-.task-row:hover{background:rgba(255,255,255,.02)}
+.task-row:hover{background:var(--hover)}
 .task-info{flex:1;min-width:0}
 .task-title{font-weight:600;font-size:15px}
 .task-meta{font-size:12px;color:var(--muted);margin-top:2px}
@@ -149,6 +159,24 @@ body.is-admin .admin-only{display:inline-flex !important}
 .done-by{font-size:12px;color:var(--green);margin-top:10px}
 .empty{padding:44px 20px;text-align:center;color:var(--muted);background:var(--panel);border:1px dashed var(--line);border-radius:var(--radius)}
 .empty p{margin-bottom:14px}
+
+/* sub-items inside a task */
+.item-list{border-top:1px solid var(--line);background:var(--hover);display:none}
+.task-card.open .item-list{display:block}
+.task-card.open .task-row .expand-hint{transform:rotate(90deg)}
+.expand-hint{color:var(--muted);font-size:11px;transition:transform .2s;flex-shrink:0}
+.item-row{display:flex;align-items:center;gap:12px;padding:12px 20px 12px 40px;border-bottom:1px solid var(--line);cursor:pointer;transition:background .12s}
+.item-row:last-child{border-bottom:none}
+.item-row:hover{background:var(--hover)}
+.item-title{font-weight:500;font-size:13.5px;flex:1;min-width:0}
+.item-sub{font-size:11.5px;color:var(--muted);margin-top:1px}
+.item-add{padding:11px 20px 13px 40px}
+.item-add button{padding:6px 13px;font-size:12px}
+.items-chip{font-size:11.5px;color:var(--muted);font-weight:600;background:var(--panel-2);border:1px solid var(--line);border-radius:999px;padding:3px 10px;white-space:nowrap}
+
+/* theme toggle */
+.theme-toggle{display:flex;align-items:center;gap:10px;width:100%;background:transparent;color:var(--muted);padding:10px 12px;border-radius:6px;margin-bottom:4px;text-align:left}
+.theme-toggle:hover{color:var(--text);background:var(--hover)}
 
 /* ================= TASK BRIEF ================= */
 .brief-dialog{width:min(860px,94vw);padding:0;max-height:90vh}
@@ -199,10 +227,10 @@ body.is-admin .admin-only{display:inline-flex !important}
 /* dashboard */
 h2.section{font-weight:600;font-size:18px;margin:0 0 16px}
 .dash-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:16px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
 .card h3{font-size:14px;font-weight:600;margin-bottom:16px}
 .plan-row{margin-bottom:14px;cursor:pointer;padding:10px;border-radius:6px;transition:background .12s}
-.plan-row:hover{background:rgba(255,255,255,.04)}
+.plan-row:hover{background:var(--hover)}
 .plan-row .pr-top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:7px}
 .plan-row .pr-top b{font-weight:600}
 .plan-row .pr-top span{color:var(--muted);font-size:12px}
@@ -215,8 +243,8 @@ h2.section{font-weight:600;font-size:18px;margin:0 0 16px}
 
 /* team */
 .team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
-.member{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;position:relative;transition:border-color .12s}
-.member:hover{border-color:#3a3a3a}
+.member{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;position:relative;transition:border-color .12s;box-shadow:var(--shadow)}
+.member:hover{border-color:var(--muted)}
 .member.me{border-color:rgba(124,108,245,.45)}
 .member .name{font-weight:600;font-size:15px}
 .member .role{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:3px 0 9px;font-weight:600}
@@ -231,7 +259,7 @@ h2.section{font-weight:600;font-size:18px;margin:0 0 16px}
 
 /* modals */
 dialog{position:fixed;inset:0;margin:auto;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:16px;padding:28px;width:min(470px,92vw);max-height:88vh;overflow:auto;height:fit-content}
-dialog::backdrop{background:rgba(4,6,12,.75)}
+dialog::backdrop{background:var(--backdrop);backdrop-filter:blur(2px)}
 dialog h3{font-weight:600;font-size:18px;margin-bottom:20px}
 .field{margin-bottom:16px}
 .field label{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-weight:600}
@@ -301,7 +329,10 @@ dialog[open]{animation:pop .18s ease}
       <button data-view="plans"><span class="ico">&#9776;</span> Plans &amp; Tasks</button>
       <button data-view="team"><span class="ico">&#9679;</span> Team</button>
     </nav>
-    <div class="side-bottom"><button id="logoutBtn">Log out</button></div>
+    <div class="side-bottom">
+      <button class="theme-toggle" id="themeToggle"><span id="themeIcon">&#9788;</span> <span id="themeLabel">Light mode</span></button>
+      <button id="logoutBtn">Log out</button>
+    </div>
   </aside>
 
   <div class="main">
@@ -496,6 +527,12 @@ dialog[open]{animation:pop .18s ease}
   <div class="modal-actions"><button class="btn-ghost" id="memberCancel">Cancel</button><button class="btn-primary" id="memberSave">Save member</button></div>
 </dialog>
 
+<dialog id="itemModal">
+  <h3 id="itemModalTitle">Add item</h3>
+  <div class="field"><label for="iTitle">Item name</label><input id="iTitle" type="text" placeholder="e.g. Video A"></div>
+  <div class="modal-actions"><button class="btn-ghost" id="itemCancel">Cancel</button><button class="btn-primary" id="itemSave">Save item</button></div>
+</dialog>
+
 <dialog id="confirmModal">
   <h3 id="confirmTitle">Are you sure?</h3>
   <p id="confirmMsg"></p>
@@ -514,6 +551,7 @@ var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSI
 var PIN = "0710";
 var ADMIN_NAME = "keirle";
 var SESSION_KEY = "d1_user_v2";
+var THEME_KEY = "d1_theme";
 
 var sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -521,22 +559,39 @@ var sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 var currentUser = null;
 var plans = [];
 var tasks = [];
+var items = [];
 var teamMembers = [];
 var activityLog = [];
 var activePlanId = null;
 var realtimeSub = null;
+var expandedTasks = {};
+var currentBriefItemId = null;
 
 /* ── Helpers ── */
 function el(id){ return document.getElementById(id); }
-function esc(s){ var d=document.createElement("div"); d.textContent=s==null?"":String(s); return d.innerHTML; }
+function esc(str){ var d=document.createElement("div"); d.textContent=str==null?"":String(str); return d.innerHTML; }
 function isAdmin(){ return !!currentUser && currentUser.toLowerCase()===ADMIN_NAME.toLowerCase(); }
 function initials(n){ return (n||"?").trim().split(/\s+/).map(function(w){return w[0];}).slice(0,2).join("").toUpperCase(); }
 function fmtDate(iso){ if(!iso) return "\u2014"; var p=iso.split("-"); if(p.length<3) return iso; var m=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]; return m[parseInt(p[1],10)-1]+" "+parseInt(p[2],10)+", "+p[0]; }
 function timeAgo(iso){ var d=(Date.now()-new Date(iso).getTime())/1000; if(d<60)return"just now"; if(d<3600)return Math.floor(d/60)+"m ago"; if(d<86400)return Math.floor(d/3600)+"h ago"; return Math.floor(d/86400)+"d ago"; }
-function scls(s){ if(s==="Completed")return"completed"; if(s==="In Progress")return"inprogress"; return"notstarted"; }
+function scls(st){ if(st==="Completed")return"completed"; if(st==="In Progress")return"inprogress"; return"notstarted"; }
 function attTypeLabel(t){ return {video:"VIDEO",audio:"AUDIO",image:"IMAGE",doc:"DOC",link:"LINK"}[t]||"LINK"; }
+function findItem(id){ return items.find(function(x){ return x.id===id; }); }
+function itemsOf(taskId){ return items.filter(function(i){ return i.task_id===taskId; }); }
 
-/* Toast */
+/* ── Theme ── */
+function applyTheme(mode){
+  document.body.classList.toggle("light", mode==="light");
+  el("themeIcon").innerHTML = mode==="light" ? "&#9789;" : "&#9788;";
+  el("themeLabel").textContent = mode==="light" ? "Dark mode" : "Light mode";
+  try{ localStorage.setItem(THEME_KEY, mode); }catch(e){}
+}
+el("themeToggle").addEventListener("click",function(){
+  applyTheme(document.body.classList.contains("light") ? "dark" : "light");
+});
+try{ applyTheme(localStorage.getItem(THEME_KEY)==="light"?"light":"dark"); }catch(e){}
+
+/* ── Toast ── */
 var toastTimer;
 function toast(msg, type){
   var t=el("toast"); t.textContent=msg; t.className="toast "+(type||"");
@@ -545,7 +600,7 @@ function toast(msg, type){
   toastTimer=setTimeout(function(){ t.classList.remove("show"); },3000);
 }
 
-/* Confirm dialog */
+/* ── Confirm ── */
 var confirmCb=null;
 function showConfirm(title,msg,onYes){
   el("confirmTitle").textContent=title; el("confirmMsg").textContent=msg||"";
@@ -557,52 +612,40 @@ el("confirmYes").addEventListener("click",function(){ var cb=confirmCb; confirmC
 /* ── Boot ── */
 async function ensureAdmin(){
   try{
-    var {data} = await sb.from("team").select("id,name,role").ilike("name", ADMIN_NAME);
+    var res = await sb.from("team").select("id,name,role").ilike("name", ADMIN_NAME);
+    var data = res.data;
     if(data && data.length){
-      // make sure role is correct
-      if(data[0].role !== "Admin"){
-        await sb.from("team").update({role:"Admin"}).eq("id", data[0].id);
-      }
+      if(data[0].role !== "Admin"){ await sb.from("team").update({role:"Admin"}).eq("id", data[0].id); }
     } else {
       await sb.from("team").insert({name:ADMIN_NAME, role:"Admin", email:""});
     }
-  }catch(e){
-    console.error("Could not verify admin account:", e);
-  }
+  }catch(e){ console.error("Could not verify admin account:", e); }
 }
 
 async function boot(){
-  // check session
   try{ currentUser=sessionStorage.getItem(SESSION_KEY); }catch(e){}
-
-  // make sure the admin account always exists before anything else loads
   await ensureAdmin();
-
-  // load data
   await loadAll();
-  hideLoading();
-
-  if(currentUser){ showApp(); }
-  else{ showLogin(); }
-
+  el("loadingScreen").style.display="none";
+  if(currentUser){ showApp(); } else { showLogin(); }
   subscribeRealtime();
 }
 
 async function loadAll(){
-  var [pr,tr,mr,ar] = await Promise.all([
+  var res = await Promise.all([
     sb.from("plans").select("*").order("created_at"),
     sb.from("tasks").select("*").order("created_at"),
+    sb.from("subtasks").select("*").order("created_at"),
     sb.from("team").select("*").order("created_at"),
     sb.from("activity").select("*").order("created_at",{ascending:false}).limit(30)
   ]);
-  plans = pr.data||[];
-  tasks = tr.data||[];
-  teamMembers = mr.data||[];
-  activityLog = ar.data||[];
+  plans = res[0].data||[];
+  tasks = res[1].data||[];
+  items = res[2].data||[];
+  teamMembers = res[3].data||[];
+  activityLog = res[4].data||[];
   if(!activePlanId && plans.length) activePlanId=plans[0].id;
 }
-
-function hideLoading(){ el("loadingScreen").style.display="none"; }
 
 /* ── Real-time ── */
 function subscribeRealtime(){
@@ -610,15 +653,12 @@ function subscribeRealtime(){
   realtimeSub = sb.channel("db-changes")
     .on("postgres_changes",{event:"*",schema:"public",table:"plans"},handleChange)
     .on("postgres_changes",{event:"*",schema:"public",table:"tasks"},handleChange)
+    .on("postgres_changes",{event:"*",schema:"public",table:"subtasks"},handleChange)
     .on("postgres_changes",{event:"*",schema:"public",table:"team"},handleChange)
     .on("postgres_changes",{event:"*",schema:"public",table:"activity"},handleChange)
     .subscribe();
 }
-
-async function handleChange(){
-  await loadAll();
-  renderAll();
-}
+async function handleChange(){ await loadAll(); renderAll(); }
 
 /* ── Login ── */
 function buildLoginSelect(){
@@ -631,7 +671,6 @@ function buildLoginSelect(){
 }
 function toggleNewName(){ el("newNameField").style.display=el("loginName").value==="__new__"?"":"none"; }
 el("loginName").addEventListener("change",toggleNewName);
-
 function showLogin(){ buildLoginSelect(); el("loginScreen").style.display="flex"; }
 
 async function doLogin(){
@@ -644,18 +683,16 @@ async function doLogin(){
     if(!name){ el("loginError").textContent="Please type your name."; el("loginNewName").focus(); return; }
     var exists=teamMembers.some(function(m){ return m.name.toLowerCase()===name.toLowerCase(); });
     if(!exists){
-      var {error}=await sb.from("team").insert({name:name,role:"Member",email:""});
-      if(error){
-        console.error("Team insert failed:", error);
-        el("loginError").textContent = error.message ? ("Couldn't save your name: " + error.message) : "Couldn't save your name. Check your connection and try again.";
+      var res=await sb.from("team").insert({name:name,role:"Member",email:""});
+      if(res.error){
+        console.error("Team insert failed:", res.error);
+        el("loginError").textContent = res.error.message ? ("Couldn't save your name: "+res.error.message) : "Couldn't save your name. Check your connection and try again.";
         return;
       }
       await logActivity(name,"joined the team");
       await loadAll();
     }
-  } else {
-    name=el("loginName").value;
-  }
+  } else { name=el("loginName").value; }
   currentUser=name;
   try{ sessionStorage.setItem(SESSION_KEY,name); }catch(e){}
   el("loginScreen").style.display="none";
@@ -665,7 +702,6 @@ el("loginBtn").addEventListener("click",doLogin);
 el("pinInput").addEventListener("keydown",function(e){ if(e.key==="Enter") doLogin(); });
 el("loginNewName").addEventListener("keydown",function(e){ if(e.key==="Enter") doLogin(); });
 
-/* ── App ── */
 function showApp(){
   el("app").style.display="block";
   var m=teamMembers.find(function(x){ return x.name===currentUser; });
@@ -711,12 +747,14 @@ function taskCounts(arr){
 }
 
 function renderDashboard(){
-  var c=taskCounts(tasks);
+  var c=taskCounts(items.length?items:tasks);
   el("dTotal").textContent=c.total; el("dDone").textContent=c.done; el("dProg").textContent=c.prog; el("dNot").textContent=c.not;
   var wrap=el("dashPlans"); wrap.innerHTML="";
   plans.forEach(function(p){
-    var pt=tasks.filter(function(t){ return t.plan_id===p.id; });
-    var pc=taskCounts(pt); var pct=pc.total?Math.round(pc.done/pc.total*100):0;
+    var planTaskIds=tasks.filter(function(t){ return t.plan_id===p.id; }).map(function(t){ return t.id; });
+    var planItems=items.filter(function(i){ return planTaskIds.indexOf(i.task_id)!==-1; });
+    var base=planItems.length?planItems:tasks.filter(function(t){ return t.plan_id===p.id; });
+    var pc=taskCounts(base); var pct=pc.total?Math.round(pc.done/pc.total*100):0;
     var row=document.createElement("div"); row.className="plan-row";
     row.innerHTML='<div class="pr-top"><b>'+esc(p.name)+'</b><span>'+pc.done+"/"+pc.total+" \u00b7 "+pct+"%</span></div>"+
       '<div class="progress-track"><div class="progress-fill" style="width:'+pct+'%"></div></div>';
@@ -755,14 +793,20 @@ function renderPlans(){
   el("planDesc").style.display=plan.description?"":"none";
 
   var pt=tasks.filter(function(t){ return t.plan_id===plan.id; });
-  var c=taskCounts(pt); var pct=c.total?Math.round(c.done/c.total*100):0;
+  var planItems=items.filter(function(i){ return pt.some(function(t){ return t.id===i.task_id; }); });
+  var base=planItems.length?planItems:pt;
+  var c=taskCounts(base); var pct=c.total?Math.round(c.done/c.total*100):0;
   el("pTotal").textContent=c.total; el("pDone").textContent=c.done; el("pProg").textContent=c.prog; el("pNot").textContent=c.not;
   el("progressFill").style.width=pct+"%"; el("progressPct").textContent=pct+"%"; el("progressCount").textContent=c.done+" / "+c.total+" completed";
 
   var q=el("searchInput").value.toLowerCase(); var sf=el("statusFilter").value;
   var filtered=pt.filter(function(t){
-    if(sf&&t.status!==sf) return false;
-    if(q&&(t.title+" "+(t.owner||"")+" "+(t.notes||"")).toLowerCase().indexOf(q)===-1) return false;
+    var kids=itemsOf(t.id);
+    if(sf && t.status!==sf && !kids.some(function(i){ return i.status===sf; })) return false;
+    if(q){
+      var hay=(t.title+" "+(t.owner||"")+" "+kids.map(function(i){ return i.title; }).join(" ")).toLowerCase();
+      if(hay.indexOf(q)===-1) return false;
+    }
     return true;
   });
 
@@ -770,24 +814,45 @@ function renderPlans(){
   list.innerHTML="";
 
   filtered.forEach(function(t){
-    var atts=Array.isArray(t.attachments)?t.attachments:[];
+    var kids=itemsOf(t.id);
+    var doneKids=kids.filter(function(i){ return i.status==="Completed"; }).length;
     var card=document.createElement("div");
-    card.className="task-card"+(t.status==="Completed"?" completed-card":"");
+    card.className="task-card"+(t.status==="Completed"?" completed-card":"")+(expandedTasks[t.id]?" open":"");
     card.dataset.id=t.id;
+
+    var itemRows="";
+    kids.forEach(function(i){
+      var atts=Array.isArray(i.attachments)?i.attachments:[];
+      itemRows+='<div class="item-row" data-openbrief="'+i.id+'">'+
+        '<div style="flex:1;min-width:0">'+
+          '<div class="item-title">'+esc(i.title)+'</div>'+
+          '<div class="item-sub">'+atts.length+' asset'+(atts.length===1?'':'s')+(i.completed_by?' \u00b7 done by '+esc(i.completed_by):'')+'</div>'+
+        '</div>'+
+        '<span class="pill '+scls(i.status)+'">'+esc(i.status)+'</span>'+
+      '</div>';
+    });
+    if(!kids.length){
+      itemRows+='<div class="item-row" style="cursor:default;color:var(--muted);font-size:13px">No items yet.</div>';
+    }
+    itemRows+='<div class="item-add admin-only"><button class="btn-ghost" data-additem="'+t.id+'">+ Add item</button>'+
+      '<button class="btn-ghost" data-edit="'+t.id+'" style="margin-left:6px">Edit task</button>'+
+      '<button class="btn-danger" data-del="'+t.id+'" style="margin-left:6px">Delete task</button></div>';
+
     card.innerHTML=
-      '<div class="task-row" data-openbrief="'+t.id+'">'+
+      '<div class="task-row" data-toggletask="'+t.id+'">'+
+        '<span class="expand-hint">&#9658;</span>'+
         '<div class="task-info">'+
           '<div class="task-title">'+esc(t.title)+'</div>'+
-          '<div class="task-meta">Owner: <b>'+esc(t.owner||"\u2014")+'</b>'+(t.end_date?' \u00b7 due '+fmtDate(t.end_date):'')+
-            (atts.length?'<span class="att-count">'+atts.length+' asset'+(atts.length>1?'s':'')+'</span>':'')+
-          '</div>'+
+          '<div class="task-meta">Owner: <b>'+esc(t.owner||"\u2014")+'</b>'+(t.end_date?' \u00b7 due '+fmtDate(t.end_date):'')+'</div>'+
         '</div>'+
+        '<span class="items-chip">'+doneKids+'/'+kids.length+' items</span>'+
         '<span class="pill '+scls(t.status)+'">'+esc(t.status)+'</span>'+
-      '</div>';
+      '</div>'+
+      '<div class="item-list">'+itemRows+'</div>';
     list.appendChild(card);
   });
   el("emptyState").hidden=filtered.length>0;
-  if(currentBriefTaskId) renderBrief();
+  if(currentBriefItemId) renderBrief();
 }
 
 function renderTeam(){
@@ -836,13 +901,13 @@ el("planSave").addEventListener("click",async function(){
   var name=el("pName").value.trim(); if(!name){ el("pName").focus(); return; }
   var desc=el("pDescIn").value.trim();
   if(editingPlanId){
-    var {error}=await sb.from("plans").update({name:name,description:desc,updated_at:new Date().toISOString()}).eq("id",editingPlanId);
-    if(error){ toast("Error saving plan","error"); return; }
+    var res=await sb.from("plans").update({name:name,description:desc,updated_at:new Date().toISOString()}).eq("id",editingPlanId);
+    if(res.error){ toast("Error saving plan","error"); return; }
     await logActivity(currentUser,'updated plan "'+name+'"');
   } else {
-    var {data,error}=await sb.from("plans").insert({name:name,description:desc}).select().single();
-    if(error){ toast("Error creating plan","error"); return; }
-    activePlanId=data.id;
+    var res2=await sb.from("plans").insert({name:name,description:desc}).select().single();
+    if(res2.error){ toast("Error creating plan","error"); return; }
+    activePlanId=res2.data.id;
     await logActivity(currentUser,'created plan "'+name+'"');
   }
   el("planModal").close();
@@ -852,15 +917,15 @@ el("planSave").addEventListener("click",async function(){
 el("deletePlanBtn").addEventListener("click",function(){
   if(!isAdmin()) return;
   var plan=plans.find(function(p){ return p.id===activePlanId; }); if(!plan) return;
-  showConfirm('Delete "'+plan.name+'"?','This deletes the plan and all its tasks.',async function(){
-    var {error}=await sb.from("plans").delete().eq("id",plan.id);
-    if(error){ toast("Error deleting plan","error"); return; }
+  showConfirm('Delete "'+plan.name+'"?','This deletes the plan, its tasks, and all their items.',async function(){
+    var res=await sb.from("plans").delete().eq("id",plan.id);
+    if(res.error){ toast("Error deleting plan","error"); return; }
     await logActivity(currentUser,'deleted plan "'+plan.name+'"');
     activePlanId=null; toast("Plan deleted","success"); await loadAll(); renderAll();
   });
 });
 
-/* ── Task CRUD ── */
+/* ── Task CRUD (admin only) ── */
 var editingTaskId=null;
 function fillOwnerSelect(sel,selected){
   sel.innerHTML='<option value="">\u2014 Unassigned \u2014</option>';
@@ -896,65 +961,66 @@ el("taskSave").addEventListener("click",async function(){
   else { payload.completed_by=null; payload.completed_at=null; }
 
   if(editingTaskId){
-    var {error}=await sb.from("tasks").update(payload).eq("id",editingTaskId);
-    if(error){ toast("Error saving task","error"); return; }
+    var res=await sb.from("tasks").update(payload).eq("id",editingTaskId);
+    if(res.error){ toast("Error saving task","error"); return; }
     await logActivity(currentUser,'updated task "'+name+'"');
   } else {
-    payload.plan_id=activePlanId; payload.created_by=currentUser;
-    payload.attachments=[]; payload.notes=''; payload.overview=''; payload.custom_fields=[]; payload.script_rows=[];
-    var {error}=await sb.from("tasks").insert(payload);
-    if(error){ toast("Error creating task","error"); return; }
+    payload.plan_id=activePlanId; payload.created_by=currentUser; payload.attachments=[];
+    var res2=await sb.from("tasks").insert(payload);
+    if(res2.error){ toast("Error creating task","error"); return; }
     await logActivity(currentUser,'added task "'+name+'"');
   }
   el("taskModal").close(); toast("Task saved","success"); await loadAll(); renderAll();
-  if(currentBriefTaskId===editingTaskId) renderBrief();
 });
 
-/* ── Attachment ── */
-var attTaskId=null;
-el("attCancel").addEventListener("click",function(){ el("attModal").close(); });
-el("attSave").addEventListener("click",async function(){
-  var url=el("aUrl").value.trim(); if(!url){ el("aUrl").focus(); return; }
-  if(!/^https?:\/\//i.test(url)) url="https://"+url;
-  var t=tasks.find(function(x){ return x.id===attTaskId; }); if(!t) return;
-  var atts=Array.isArray(t.attachments)?[...t.attachments]:[];
-  atts.push({id:Date.now(),type:el("aType").value,label:el("aLabel").value.trim(),url:url,addedBy:currentUser,addedAt:new Date().toISOString()});
-  var {error}=await sb.from("tasks").update({attachments:atts}).eq("id",attTaskId);
-  if(error){ toast("Error adding link","error"); return; }
-  await logActivity(currentUser,'added a '+el("aType").value+' link to "'+t.title+'"');
-  el("attModal").close(); toast("Link added","success"); await loadAll(); renderAll();
+/* ── Item CRUD (sub-items inside a task) ── */
+var itemTaskId=null;
+var editingItemId=null;
+el("itemCancel").addEventListener("click",function(){ el("itemModal").close(); });
+el("iTitle").addEventListener("keydown",function(e){ if(e.key==="Enter") el("itemSave").click(); });
+el("itemSave").addEventListener("click",async function(){
+  if(!isAdmin()) return;
+  var title=el("iTitle").value.trim(); if(!title){ el("iTitle").focus(); return; }
+  if(editingItemId){
+    var res=await sb.from("subtasks").update({title:title,updated_at:new Date().toISOString()}).eq("id",editingItemId);
+    if(res.error){ toast("Error renaming item","error"); return; }
+    await logActivity(currentUser,'renamed an item to "'+title+'"');
+  } else {
+    var res2=await sb.from("subtasks").insert({
+      task_id:itemTaskId, title:title, status:"Not Started",
+      overview:"", notes:"", custom_fields:[], script_rows:[], attachments:[],
+      created_by:currentUser
+    });
+    if(res2.error){ toast("Error adding item","error"); return; }
+    await logActivity(currentUser,'added item "'+title+'"');
+  }
+  el("itemModal").close(); toast("Item saved","success"); await loadAll(); renderAll();
 });
 
-/* ================= TASK BRIEF ================= */
-var currentBriefTaskId=null;
-
-function findTask(id){ return tasks.find(function(x){ return x.id===id; }); }
-
+/* ================= ITEM BRIEF ================= */
 window.openBrief=function(id){
-  currentBriefTaskId=id;
+  currentBriefItemId=id;
   el("briefFieldForm").classList.remove("show");
   el("briefOverviewEdit").style.display="none"; el("briefOverviewView").style.display="";
   el("briefNotesEdit").style.display="none"; el("briefNotesView").style.display="";
   renderBrief();
   el("briefModal").showModal();
 };
-function closeBrief(){ el("briefModal").close(); currentBriefTaskId=null; }
+function closeBrief(){ el("briefModal").close(); currentBriefItemId=null; }
 el("briefClose").addEventListener("click",closeBrief);
 
 function renderBrief(){
-  var t=findTask(currentBriefTaskId);
+  var t=findItem(currentBriefItemId);
   if(!t){ closeBrief(); return; }
+  var parent=tasks.find(function(x){ return x.id===t.task_id; });
 
   el("briefTitleText").textContent=t.title;
   var metaBits=[];
   metaBits.push('<span class="pill '+scls(t.status)+'">'+esc(t.status)+'</span>');
-  metaBits.push('Owner: <b style="color:var(--text)">'+esc(t.owner||"\u2014")+'</b>');
-  if(t.start_date) metaBits.push("Start "+fmtDate(t.start_date));
-  if(t.end_date) metaBits.push("Due "+fmtDate(t.end_date));
+  if(parent) metaBits.push('Task: <b style="color:var(--text)">'+esc(parent.title)+'</b>');
   metaBits.push("Created "+fmtDate((t.created_at||"").slice(0,10)));
   el("briefMetaLine").innerHTML=metaBits.join(' <span style="opacity:.4">\u00b7</span> ');
 
-  // ---- Fields ----
   var fields=Array.isArray(t.custom_fields)?t.custom_fields:[];
   var ff=el("briefFields");
   if(!fields.length){
@@ -969,25 +1035,17 @@ function renderBrief(){
     });
   }
 
-  // ---- Overview ----
-  el("briefOverviewView").innerHTML = t.overview
-    ? esc(t.overview)
-    : '<span class="empty-hint">No overview yet.</span>';
+  el("briefOverviewView").innerHTML = t.overview ? esc(t.overview) : '<span class="empty-hint">No overview yet.</span>';
   el("briefOverviewInput").value = t.overview || "";
-
-  // ---- Notes ----
-  el("briefNotesView").innerHTML = t.notes
-    ? esc(t.notes)
-    : '<span class="empty-hint">No notes yet.</span>';
+  el("briefNotesView").innerHTML = t.notes ? esc(t.notes) : '<span class="empty-hint">No notes yet.</span>';
   el("briefNotesInput").value = t.notes || "";
 
-  // ---- Script + Visuals ----
   var rows=Array.isArray(t.script_rows)?t.script_rows:[];
   var st=el("briefScriptTable");
   if(!rows.length){
     st.innerHTML='<div class="brief-text empty-hint">No script rows yet.</div>';
   } else {
-    var html='<div class="brief-script-row head"><div>Script</div><div>Visuals</div><div></div></div>';
+    var html='<div class="brief-script-table"><div class="brief-script-row head"><div>Script</div><div>Visuals</div><div></div></div>';
     rows.forEach(function(r){
       html+='<div class="brief-script-row" data-rowid="'+r.id+'">'+
         '<textarea data-scriptcell="script" '+(isAdmin()?'':'readonly')+' placeholder="What is said...">'+esc(r.script||"")+'</textarea>'+
@@ -995,10 +1053,10 @@ function renderBrief(){
         (isAdmin()?'<button class="bs-rm" data-rmrow="'+r.id+'">\u00d7</button>':'<div></div>')+
       '</div>';
     });
+    html+='</div>';
     st.innerHTML=html;
   }
 
-  // ---- Assets (links + inline images) ----
   var atts=Array.isArray(t.attachments)?t.attachments:[];
   var ba=el("briefAssets");
   if(!atts.length){
@@ -1024,14 +1082,13 @@ function renderBrief(){
     ba.innerHTML=html2;
   }
 
-  // ---- Footer ----
   el("briefDoneBy").textContent = (t.status==="Completed"&&t.completed_by)
     ? "Completed by "+t.completed_by+(t.completed_at?" \u00b7 "+fmtDate(t.completed_at.slice(0,10)):"")
     : "";
   el("briefCompleteBtn").style.display = t.status==="Completed" ? "none" : "";
 }
 
-/* Add / remove custom fields */
+/* Fields */
 el("briefAddFieldBtn").addEventListener("click",function(){
   el("bfLabel").value=""; el("bfValue").value="";
   el("briefFieldForm").classList.add("show"); el("bfLabel").focus();
@@ -1039,16 +1096,16 @@ el("briefAddFieldBtn").addEventListener("click",function(){
 el("bfCancel").addEventListener("click",function(){ el("briefFieldForm").classList.remove("show"); });
 el("bfSave").addEventListener("click",async function(){
   var label=el("bfLabel").value.trim(); if(!label){ el("bfLabel").focus(); return; }
-  var t=findTask(currentBriefTaskId); if(!t) return;
-  var fields=Array.isArray(t.custom_fields)?[...t.custom_fields]:[];
+  var t=findItem(currentBriefItemId); if(!t) return;
+  var fields=Array.isArray(t.custom_fields)?t.custom_fields.slice():[];
   fields.push({id:Date.now(),label:label,value:el("bfValue").value.trim()});
-  var {error}=await sb.from("tasks").update({custom_fields:fields}).eq("id",t.id);
-  if(error){ toast("Error saving field","error"); return; }
+  var res=await sb.from("subtasks").update({custom_fields:fields}).eq("id",t.id);
+  if(res.error){ toast("Error saving field","error"); return; }
   el("briefFieldForm").classList.remove("show");
   toast("Field added","success"); await loadAll(); renderAll();
 });
 
-/* Overview edit */
+/* Overview */
 el("briefEditOverviewBtn").addEventListener("click",function(){
   if(!isAdmin()) return;
   el("briefOverviewView").style.display="none"; el("briefOverviewEdit").style.display="";
@@ -1058,16 +1115,16 @@ el("briefOverviewCancel").addEventListener("click",function(){
   el("briefOverviewEdit").style.display="none"; el("briefOverviewView").style.display="";
 });
 el("briefOverviewSave").addEventListener("click",async function(){
-  var t=findTask(currentBriefTaskId); if(!t) return;
+  var t=findItem(currentBriefItemId); if(!t) return;
   var val=el("briefOverviewInput").value.trim();
-  var {error}=await sb.from("tasks").update({overview:val}).eq("id",t.id);
-  if(error){ toast("Error saving overview","error"); return; }
+  var res=await sb.from("subtasks").update({overview:val}).eq("id",t.id);
+  if(res.error){ toast("Error saving overview","error"); return; }
   await logActivity(currentUser,'updated the overview on "'+t.title+'"');
   el("briefOverviewEdit").style.display="none"; el("briefOverviewView").style.display="";
   toast("Overview saved","success"); await loadAll(); renderAll();
 });
 
-/* Notes edit */
+/* Notes */
 el("briefEditNotesBtn").addEventListener("click",function(){
   if(!isAdmin()) return;
   el("briefNotesView").style.display="none"; el("briefNotesEdit").style.display="";
@@ -1077,10 +1134,10 @@ el("briefNotesCancel").addEventListener("click",function(){
   el("briefNotesEdit").style.display="none"; el("briefNotesView").style.display="";
 });
 el("briefNotesSave").addEventListener("click",async function(){
-  var t=findTask(currentBriefTaskId); if(!t) return;
+  var t=findItem(currentBriefItemId); if(!t) return;
   var val=el("briefNotesInput").value.trim();
-  var {error}=await sb.from("tasks").update({notes:val}).eq("id",t.id);
-  if(error){ toast("Error saving notes","error"); return; }
+  var res=await sb.from("subtasks").update({notes:val}).eq("id",t.id);
+  if(res.error){ toast("Error saving notes","error"); return; }
   await logActivity(currentUser,'updated notes on "'+t.title+'"');
   el("briefNotesEdit").style.display="none"; el("briefNotesView").style.display="";
   toast("Notes saved","success"); await loadAll(); renderAll();
@@ -1089,52 +1146,70 @@ el("briefNotesSave").addEventListener("click",async function(){
 /* Script rows */
 el("briefAddRowBtn").addEventListener("click",async function(){
   if(!isAdmin()) return;
-  var t=findTask(currentBriefTaskId); if(!t) return;
-  var rows=Array.isArray(t.script_rows)?[...t.script_rows]:[];
+  var t=findItem(currentBriefItemId); if(!t) return;
+  var rows=Array.isArray(t.script_rows)?t.script_rows.slice():[];
   rows.push({id:Date.now(),script:"",visuals:""});
-  var {error}=await sb.from("tasks").update({script_rows:rows}).eq("id",t.id);
-  if(error){ toast("Error adding row","error"); return; }
+  var res=await sb.from("subtasks").update({script_rows:rows}).eq("id",t.id);
+  if(res.error){ toast("Error adding row","error"); return; }
   await loadAll(); renderAll();
 });
 document.addEventListener("blur",async function(e){
   var cell=e.target.closest&&e.target.closest("[data-scriptcell]");
   if(!cell||!isAdmin()) return;
   var rowEl=cell.closest("[data-rowid]"); if(!rowEl) return;
-  var t=findTask(currentBriefTaskId); if(!t) return;
-  var rows=Array.isArray(t.script_rows)?[...t.script_rows]:[];
+  var t=findItem(currentBriefItemId); if(!t) return;
+  var rows=Array.isArray(t.script_rows)?t.script_rows.slice():[];
   var idx=rows.findIndex(function(r){ return String(r.id)===rowEl.dataset.rowid; });
   if(idx===-1) return;
   var field=cell.dataset.scriptcell;
-  if(rows[idx][field]===cell.value) return; // no change
-  rows[idx][field]=cell.value;
-  var {error}=await sb.from("tasks").update({script_rows:rows}).eq("id",t.id);
-  if(!error){ tasks=tasks.map(function(x){ return x.id===t.id?{...x,script_rows:rows}:x; }); }
+  if(rows[idx][field]===cell.value) return;
+  rows[idx]=Object.assign({},rows[idx]); rows[idx][field]=cell.value;
+  var res=await sb.from("subtasks").update({script_rows:rows}).eq("id",t.id);
+  if(!res.error){ items=items.map(function(x){ return x.id===t.id?Object.assign({},x,{script_rows:rows}):x; }); }
 },true);
 
-/* Add asset button inside brief opens the existing attModal */
+/* Assets (open to all members) */
+var attTaskId=null;
+el("attCancel").addEventListener("click",function(){ el("attModal").close(); });
 el("briefAddAssetBtn").addEventListener("click",function(){
-  attTaskId=currentBriefTaskId; el("aType").value="video"; el("aLabel").value=""; el("aUrl").value="";
+  attTaskId=currentBriefItemId; el("aType").value="video"; el("aLabel").value=""; el("aUrl").value="";
   el("attModal").showModal(); el("aLabel").focus();
 });
+el("attSave").addEventListener("click",async function(){
+  var url=el("aUrl").value.trim(); if(!url){ el("aUrl").focus(); return; }
+  if(!/^https?:\/\//i.test(url)) url="https://"+url;
+  var t=findItem(attTaskId); if(!t) return;
+  var atts=Array.isArray(t.attachments)?t.attachments.slice():[];
+  atts.push({id:Date.now(),type:el("aType").value,label:el("aLabel").value.trim(),url:url,addedBy:currentUser,addedAt:new Date().toISOString()});
+  var res=await sb.from("subtasks").update({attachments:atts}).eq("id",attTaskId);
+  if(res.error){ toast("Error adding link","error"); return; }
+  await logActivity(currentUser,'added a '+el("aType").value+' link to "'+t.title+'"');
+  el("attModal").close(); toast("Link added","success"); await loadAll(); renderAll();
+});
 
-/* Complete / edit details / delete, from within the brief */
+/* Brief footer actions */
 el("briefCompleteBtn").addEventListener("click",async function(){
-  var t=findTask(currentBriefTaskId); if(!t) return;
-  await sb.from("tasks").update({status:"Completed",completed_by:currentUser,completed_at:new Date().toISOString()}).eq("id",t.id);
+  var t=findItem(currentBriefItemId); if(!t) return;
+  await sb.from("subtasks").update({status:"Completed",completed_by:currentUser,completed_at:new Date().toISOString()}).eq("id",t.id);
   await logActivity(currentUser,'completed "'+t.title+'"');
   toast("Marked as completed","success"); await loadAll(); renderAll();
 });
 el("briefEditDetailsBtn").addEventListener("click",function(){
-  if(!currentBriefTaskId) return;
-  openTaskModal(currentBriefTaskId);
+  if(!isAdmin()||!currentBriefItemId) return;
+  var t=findItem(currentBriefItemId); if(!t) return;
+  editingItemId=t.id; itemTaskId=null;
+  el("itemModalTitle").textContent="Rename item";
+  el("iTitle").value=t.title;
+  el("itemModal").showModal(); el("iTitle").focus();
 });
 el("briefDeleteBtn").addEventListener("click",function(){
-  var t=findTask(currentBriefTaskId); if(!t) return;
-  showConfirm('Delete this task?','"'+t.title+'" will be removed.',async function(){
-    await sb.from("tasks").delete().eq("id",t.id);
-    await logActivity(currentUser,'deleted task "'+t.title+'"');
+  if(!isAdmin()) return;
+  var t=findItem(currentBriefItemId); if(!t) return;
+  showConfirm('Delete this item?','"'+t.title+'" and its brief will be removed.',async function(){
+    await sb.from("subtasks").delete().eq("id",t.id);
+    await logActivity(currentUser,'deleted item "'+t.title+'"');
     closeBrief();
-    toast("Task deleted","success"); await loadAll(); renderAll();
+    toast("Item deleted","success"); await loadAll(); renderAll();
   });
 });
 
@@ -1151,18 +1226,19 @@ el("memberSave").addEventListener("click",async function(){
   var name=el("mName").value.trim(); if(!name){ el("mName").focus(); return; }
   var role=el("mRole").value.trim()||"Member"; var email=el("mEmail").value.trim();
   if(editingMemberId){
-    var {error}=await sb.from("team").update({name:name,role:role,email:email}).eq("id",editingMemberId);
-    if(error){ toast("Error saving member","error"); return; }
-    if(currentUser&&name!==currentUser){
-      // name changed — update session
-      var oldName=currentUser; currentUser=name;
+    var editingMember=teamMembers.find(function(x){ return x.id===editingMemberId; });
+    var wasMe=editingMember&&editingMember.name===currentUser;
+    var res=await sb.from("team").update({name:name,role:role,email:email}).eq("id",editingMemberId);
+    if(res.error){ toast("Error saving member","error"); return; }
+    if(wasMe&&name!==currentUser){
+      currentUser=name;
       try{ sessionStorage.setItem(SESSION_KEY,name); }catch(e){}
       el("userName").textContent=name; el("userAvatar").textContent=initials(name);
     }
-    await logActivity(currentUser,'updated their profile');
+    await logActivity(currentUser,'updated a team profile');
   } else {
-    var {error}=await sb.from("team").insert({name:name,role:role,email:email});
-    if(error){ toast("Error adding member","error"); return; }
+    var res2=await sb.from("team").insert({name:name,role:role,email:email});
+    if(res2.error){ toast("Error adding member","error"); return; }
     await logActivity(currentUser,'added member "'+name+'"');
   }
   el("memberModal").close(); toast("Saved","success"); await loadAll(); renderAll();
@@ -1170,31 +1246,57 @@ el("memberSave").addEventListener("click",async function(){
 
 /* ── Delegated clicks ── */
 document.addEventListener("click",async function(e){
+  var taskToggle=e.target.closest&&e.target.closest("[data-toggletask]");
+  if(taskToggle&&!e.target.closest("button")){
+    var tid=taskToggle.dataset.toggletask;
+    expandedTasks[tid]=!expandedTasks[tid];
+    taskToggle.parentElement.classList.toggle("open",expandedTasks[tid]);
+    return;
+  }
+
   var briefTrigger=e.target.closest&&e.target.closest("[data-openbrief]");
-  if(briefTrigger){ openBrief(briefTrigger.dataset.openbrief); return; }
+  if(briefTrigger&&!e.target.closest("button")){ openBrief(briefTrigger.dataset.openbrief); return; }
 
   var imgTrigger=e.target.closest&&e.target.closest("[data-openimg]");
   if(imgTrigger){ window.open(imgTrigger.dataset.openimg,"_blank","noopener"); return; }
 
   var btn=e.target.closest&&e.target.closest("button"); if(!btn) return;
 
+  if(btn.dataset.additem&&isAdmin()){
+    itemTaskId=btn.dataset.additem; editingItemId=null;
+    el("itemModalTitle").textContent="Add item";
+    el("iTitle").value="";
+    el("itemModal").showModal(); el("iTitle").focus();
+  }
+
+  if(btn.dataset.edit){ openTaskModal(btn.dataset.edit); }
+
+  if(btn.dataset.del&&isAdmin()){
+    var t=tasks.find(function(x){ return x.id===btn.dataset.del; });
+    if(t) showConfirm('Delete this task?','"'+t.title+'" and all its items will be removed.',async function(){
+      await sb.from("tasks").delete().eq("id",t.id);
+      await logActivity(currentUser,'deleted task "'+t.title+'"');
+      toast("Task deleted","success"); await loadAll(); renderAll();
+    });
+  }
+
   if(btn.dataset.rmfield&&isAdmin()){
-    var t=findTask(currentBriefTaskId);
-    if(t){
+    var it=findItem(currentBriefItemId);
+    if(it){
       showConfirm("Remove this field?","",async function(){
-        var fields=(t.custom_fields||[]).filter(function(f){ return String(f.id)!==btn.dataset.rmfield; });
-        await sb.from("tasks").update({custom_fields:fields}).eq("id",t.id);
+        var fields=(it.custom_fields||[]).filter(function(f){ return String(f.id)!==btn.dataset.rmfield; });
+        await sb.from("subtasks").update({custom_fields:fields}).eq("id",it.id);
         toast("Field removed","success"); await loadAll(); renderAll();
       });
     }
   }
 
   if(btn.dataset.rmrow&&isAdmin()){
-    var t=findTask(currentBriefTaskId);
-    if(t){
+    var it2=findItem(currentBriefItemId);
+    if(it2){
       showConfirm("Remove this row?","",async function(){
-        var rows=(t.script_rows||[]).filter(function(r){ return String(r.id)!==btn.dataset.rmrow; });
-        await sb.from("tasks").update({script_rows:rows}).eq("id",t.id);
+        var rows=(it2.script_rows||[]).filter(function(r){ return String(r.id)!==btn.dataset.rmrow; });
+        await sb.from("subtasks").update({script_rows:rows}).eq("id",it2.id);
         toast("Row removed","success"); await loadAll(); renderAll();
       });
     }
@@ -1202,12 +1304,12 @@ document.addEventListener("click",async function(e){
 
   if(btn.dataset.delatt){
     var parts=btn.dataset.delatt.split(":");
-    var tid=parts[0]; var aid=parseInt(parts[1],10);
-    var t=tasks.find(function(x){ return x.id===tid; });
-    if(t){
+    var iid=parts[0]; var aid=parseInt(parts[1],10);
+    var it3=findItem(iid);
+    if(it3){
       showConfirm("Remove this link?","The file itself is not affected.",async function(){
-        var atts=(t.attachments||[]).filter(function(a){ return a.id!==aid; });
-        await sb.from("tasks").update({attachments:atts}).eq("id",tid);
+        var atts=(it3.attachments||[]).filter(function(a){ return a.id!==aid; });
+        await sb.from("subtasks").update({attachments:atts}).eq("id",iid);
         toast("Link removed","success"); await loadAll(); renderAll();
       });
     }
@@ -1223,14 +1325,13 @@ document.addEventListener("click",async function(e){
   }
 
   if(btn.dataset.delmember){
-    var m=teamMembers.find(function(x){ return x.id===btn.dataset.delmember; });
-    if(!m||m.name.toLowerCase()===ADMIN_NAME.toLowerCase()) return;
-    var isSelf=m.name===currentUser;
-    var canDel=isSelf||isAdmin();
-    if(!canDel) return;
-    showConfirm('Remove "'+m.name+'"?',isSelf?'You will be logged out.':'They will be removed from the team.',async function(){
-      await sb.from("team").delete().eq("id",m.id);
-      await logActivity(currentUser,'removed "'+m.name+'" from the team');
+    var dm=teamMembers.find(function(x){ return x.id===btn.dataset.delmember; });
+    if(!dm||dm.name.toLowerCase()===ADMIN_NAME.toLowerCase()) return;
+    var isSelf=dm.name===currentUser;
+    if(!isSelf&&!isAdmin()) return;
+    showConfirm('Remove "'+dm.name+'"?',isSelf?'You will be logged out.':'They will be removed from the team.',async function(){
+      await sb.from("team").delete().eq("id",dm.id);
+      await logActivity(currentUser,'removed "'+dm.name+'" from the team');
       toast("Member removed","success"); await loadAll();
       if(isSelf) el("logoutBtn").click(); else renderAll();
     });
