@@ -516,6 +516,7 @@ dialog[open]{animation:pop .18s ease}
   <div class="brief-footer">
     <div id="briefDoneBy"></div>
     <div class="brief-footer-actions">
+      <button class="btn-primary" id="briefStartBtn">Start task</button>
       <button class="btn-review" id="briefReviewBtn">Submit for review</button>
       <button class="btn-ghost admin-only" id="briefSendBackBtn">Send back to In Progress</button>
       <button class="btn-green admin-only" id="briefCompleteBtn">Mark completed</button>
@@ -864,6 +865,10 @@ function renderPlans(){
     return true;
   });
 
+  filtered.sort(function(a,b){
+    return (a.status==="Completed"?1:0) - (b.status==="Completed"?1:0);
+  });
+
   var list=el("taskList");
   list.innerHTML="";
 
@@ -1141,6 +1146,7 @@ function renderBrief(){
   el("briefDoneBy").textContent = (t.status==="Completed"&&t.completed_by)
     ? "Completed by "+t.completed_by+(t.completed_at?" \u00b7 "+fmtDate(t.completed_at.slice(0,10)):"")
     : (t.status==="Needs Review" ? "Waiting for review" : "");
+  el("briefStartBtn").classList.toggle("force-hide", t.status!=="Not Started");
   el("briefCompleteBtn").classList.toggle("force-hide", t.status==="Completed");
   el("briefReviewBtn").classList.toggle("force-hide", t.status==="Completed"||t.status==="Needs Review");
   el("briefSendBackBtn").classList.toggle("force-hide", t.status!=="Needs Review");
@@ -1248,6 +1254,13 @@ el("attSave").addEventListener("click",async function(){
 });
 
 /* Brief footer actions */
+el("briefStartBtn").addEventListener("click",async function(){
+  var t=findItem(currentBriefItemId); if(!t) return;
+  var res=await sb.from("subtasks").update({status:"In Progress",updated_at:new Date().toISOString()}).eq("id",t.id);
+  if(res.error){ toast("Error starting task","error"); return; }
+  await logActivity(currentUser,'started "'+t.title+'"');
+  toast("Task started","success"); await refreshAndSync(t.task_id);
+});
 el("briefReviewBtn").addEventListener("click",async function(){
   var t=findItem(currentBriefItemId); if(!t) return;
   var res=await sb.from("subtasks").update({status:"Needs Review",updated_at:new Date().toISOString()}).eq("id",t.id);
