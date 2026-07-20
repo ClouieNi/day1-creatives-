@@ -1051,7 +1051,7 @@ function renderTeam(){
       (canManage?
         '<div class="card-actions">'+
           '<button data-editmember="'+m.id+'">Edit</button>'+
-          (!mIsAdmin?'<button class="rm" data-delmember="'+m.id+'">\u00d7</button>':'')+
+          ((!mIsAdmin||isMe)?'<button class="rm" data-delmember="'+m.id+'">\u00d7</button>':'')+
         '</div>':'')+
       '<div class="name">'+esc(m.name)+
         (isMe?' <span class="you-tag">You</span>':'')+
@@ -1551,7 +1551,8 @@ document.addEventListener("click",async function(e){
 
   if(btn.dataset.delmember){
     var dm=teamMembers.find(function(x){ return x.id===btn.dataset.delmember; });
-    if(!dm||(dm.role||"").toLowerCase()==="admin") return;
+    if(!dm) return;
+    if((dm.role||"").toLowerCase()==="admin"&&dm.name!==currentUser) return;
     var isSelf=dm.name===currentUser;
     if(!isSelf&&!isAdmin()) return;
     showConfirm('Remove "'+dm.name+'"?',isSelf?'You will be logged out.':'They will be removed from the team.',async function(){
